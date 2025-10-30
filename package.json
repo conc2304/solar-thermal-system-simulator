@@ -9,14 +9,20 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",
-    "coverage": "jest --coverage --collectCoverageFrom='src/*/**/*.{ts,tsx}'"
+    "coverage": "jest --coverage --collectCoverageFrom='src/*/**/*.{ts,tsx}'",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^4.1.2",
     "@eslint/js": "^9.36.0",
+    "@storybook/addon-docs": "^10.0.2",
+    "@storybook/addon-onboarding": "^10.0.2",
+    "@storybook/react-vite": "^10.0.2",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
@@ -30,11 +36,13 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
+    "eslint-plugin-storybook": "^10.0.2",
     "globals": "^16.4.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "jest-transformer-svg": "^2.1.0",
+    "storybook": "^10.0.2",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3",
