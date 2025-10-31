@@ -1,5 +1,6 @@
 import { type Theme } from 'theme-ui';
 import { rawColors } from './rawColors';
+import { TextVariants } from './component-variants/text-variants';
 import { ButtonVariants } from './component-variants';
 
 
@@ -50,7 +51,7 @@ export const DefaultTheme: Theme = {
   },
 
   // WebGL-friendly space and sizing
-  space: [ 0, 0.25, 0.5, 1, 1.5, 2, 3, 4, 6, 8 ],
+  space: [ 0, 4, 8, 12, 16, 24, 30, 60, 512 ],
 
   sizes: {
     container: {
@@ -85,9 +86,6 @@ export const DefaultTheme: Theme = {
     useBorderBox: true,
   },
 
-  // Component Variants
-  buttons: ButtonVariants,
-
 
   // Style Overrides
   styles: {
@@ -98,5 +96,9 @@ export const DefaultTheme: Theme = {
       transition: 'background-color 0.2s ease-out, color 0.2s ease-out',
       background: rawColors.red[ 500 ]
     }
-  }
+  },
+
+  // Component Variants
+  buttons: ButtonVariants,
+  text: TextVariants,
 };

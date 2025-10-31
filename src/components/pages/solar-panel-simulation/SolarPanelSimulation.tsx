@@ -9,7 +9,7 @@ export const SolarPanelSimulation = () => {
     >
       <h1 sx={{ color: 'text' }}>Solar Panel Simulations</h1>
 
-      <Button>Click</Button>
+      <Button size="sm">Click</Button>
       <Button variant="outlined" color="primary">
         Click
       </Button>

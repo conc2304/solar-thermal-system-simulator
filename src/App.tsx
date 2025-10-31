@@ -1,11 +1,10 @@
-import { useThemeUI, useColorMode } from 'theme-ui';
+import { useThemeUI } from 'theme-ui';
 import { SolarPanelSimulation } from './components/pages/solar-panel-simulation';
 import { Helmet } from 'react-helmet';
-import { Button } from './components';
+import { ColorModeToggle } from './components/molecules';
 
 function App() {
   const { theme } = useThemeUI();
-  const [mode, setMode] = useColorMode();
 
   return (
     <>
@@ -13,14 +12,8 @@ function App() {
         <meta name="theme-color" content={theme.colors?.primary?.toString()} />
       </Helmet>
 
-      <Button
-        onClick={() => {
-          const next = mode === 'dark' ? 'light' : 'dark';
-          setMode(next);
-        }}
-      >
-        Toggle Mode: {mode}
-      </Button>
+      <ColorModeToggle />
+
       <SolarPanelSimulation />
     </>
   );
