@@ -7,7 +7,7 @@ export const SolarPanelSimulation = () => {
         bg: 'background',
       }}
     >
-      <h1 sx={{ color: 'error' }}>Solar Panel Simulations</h1>
+      <h1 sx={{ color: 'text' }}>Solar Panel Simulations</h1>
 
       <Button>Click</Button>
       <Button variant="outlined" color="primary">

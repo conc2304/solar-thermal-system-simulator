@@ -117,17 +117,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           // Base button styles from theme
           ...(typedButtonTheme.base || {}),
           // Apply variant styles
-          // ...(typedButtonTheme?.variant?.[variant] || {}),
+          ...(typedButtonTheme?.variant?.[variant] || {}),
           // // Apply size styles
-          // ...(typedButtonTheme?.sizes?.[size] || {}),
+          ...(typedButtonTheme?.sizes?.[size] || {}),
           // // Apply color styles based on variant
           ...colorStyles,
-          // // Flexbox and additional base styles
-          // gap: 2,
-          // cursor: 'pointer',
-          // transition: 'all 0.2s ease',
           // // Allow additional custom styling
-          // ...sx,
+          ...sx,
         }}
         // Accessibility attributes
         aria-label={

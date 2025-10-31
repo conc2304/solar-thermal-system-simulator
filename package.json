@@ -17,6 +17,7 @@
     "@emotion/react": "^11.14.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-helmet": "^6.1.0",
     "theme-ui": "^0.17.2"
   },
   "devDependencies": {
@@ -35,6 +36,7 @@
     "@types/node": "^24.6.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "@types/react-helmet": "^6.1.11",
     "@vitejs/plugin-react": "^5.0.4",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "eslint": "^9.36.0",

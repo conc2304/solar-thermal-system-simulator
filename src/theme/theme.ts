@@ -95,7 +95,8 @@ export const DefaultTheme: Theme = {
       fontFamily: 'body',
       lineHeight: 'body',
       fontWeight: 'body',
-      transition: 'background-color 0.2s ease-out, color 0.2s ease-out'
+      transition: 'background-color 0.2s ease-out, color 0.2s ease-out',
+      background: rawColors.red[ 500 ]
     }
   }
 };
