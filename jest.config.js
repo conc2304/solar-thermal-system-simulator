@@ -6,7 +6,12 @@ export default {
       {
         tsconfig: {
           jsx: 'react-jsx',
+          jsxImportSource: 'theme-ui',
           esModuleInterop: true,
+          baseUrl: './src',
+          paths: {
+            '@/*': ['./*'],
+          },
         },
       },
     ],
