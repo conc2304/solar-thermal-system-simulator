@@ -15,6 +15,7 @@
       "@testing-library/jest-dom"
     ],
     "skipLibCheck": true,
+    "jsxImportSource": "theme-ui",
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

@@ -20,6 +20,8 @@
     "theme-ui": "^0.17.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
     "@chromatic-com/storybook": "^4.1.2",
     "@eslint/js": "^9.36.0",
     "@storybook/addon-docs": "^10.0.2",
@@ -34,6 +36,7 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.0.4",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^5.2.0",

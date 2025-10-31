@@ -1,3 +1,5 @@
+import { Button } from '@/components/atoms';
+
 export const SolarPanelSimulation = () => {
   return (
     <div
@@ -5,7 +7,15 @@ export const SolarPanelSimulation = () => {
         bg: 'background',
       }}
     >
-      <h1 sx={{ color: 'primary' }}>Solar Panel Simulations</h1>
+      <h1 sx={{ color: 'error' }}>Solar Panel Simulations</h1>
+
+      <Button>Click</Button>
+      <Button variant="outlined" color="primary">
+        Click
+      </Button>
+      <Button variant="contained" color="secondary" size="lg">
+        Click
+      </Button>
     </div>
   );
 };
