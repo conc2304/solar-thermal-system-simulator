@@ -1,7 +1,8 @@
-import type { ThemeColors, ThemeSizes } from '@/theme';
 import React, { forwardRef } from 'react';
-import { useThemeUI, type ThemeUICSSObject } from 'theme-ui';
 import { get } from '@theme-ui/css';
+import { useThemeUI, type ThemeUICSSObject } from 'theme-ui';
+
+import type { ThemeColors, ThemeSizes } from '@/theme';
 import { getVariantKey, type ButtonVariants } from '@/theme/component-variants';
 
 // Button component props

@@ -2,8 +2,10 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ThemeUIProvider } from 'theme-ui';
-import { Button } from './Button';
+
 import { DefaultTheme } from '@/theme';
+
+import { Button } from './Button';
 
 // Helper to render component with theme
 const renderWithTheme = (ui: React.ReactElement) => {

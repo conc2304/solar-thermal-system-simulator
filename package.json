@@ -15,11 +15,14 @@
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
+    "eslint-plugin-import": "^2.32.0",
     "lucide-react": "^0.552.0",
+    "perlin-noise": "^0.0.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-helmet": "^6.1.0",
-    "theme-ui": "^0.17.2"
+    "theme-ui": "^0.17.2",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",

@@ -1,5 +1,6 @@
-import { useColorMode } from 'theme-ui';
 import { Moon, Sun } from 'lucide-react';
+import { useColorMode } from 'theme-ui';
+
 import { Button } from '@/components/atoms';
 
 export const ColorModeToggle = () => {

@@ -1,7 +1,8 @@
-import { useThemeUI } from 'theme-ui';
-import { SolarPanelSimulation } from './components/pages/solar-panel-simulation';
 import { Helmet } from 'react-helmet';
+import { useThemeUI } from 'theme-ui';
+
 import { ColorModeToggle } from './components/molecules';
+import { SolarPanelSimulation } from './components/pages/solar-panel-simulation';
 
 function App() {
   const { theme } = useThemeUI();

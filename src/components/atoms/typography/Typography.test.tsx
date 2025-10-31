@@ -1,9 +1,11 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
 import { ThemeUIProvider } from 'theme-ui';
-import { Typography } from './Typography';
+
 import { DefaultTheme } from '@/theme';
+
+import { Typography } from './Typography';
 
 const renderWithTheme = (ui: React.ReactElement) => {
   return render(<ThemeUIProvider theme={DefaultTheme}>{ui}</ThemeUIProvider>);

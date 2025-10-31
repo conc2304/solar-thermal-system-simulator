@@ -1,7 +1,8 @@
 import { type Theme } from 'theme-ui';
-import { rawColors } from './rawColors';
-import { TextVariants } from './component-variants/text-variants';
+
 import { ButtonVariants } from './component-variants';
+import { TextVariants } from './component-variants/text-variants';
+import { rawColors } from './rawColors';
 
 
 export const DefaultTheme: Theme = {

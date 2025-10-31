@@ -1,5 +1,5 @@
-import type { ThemeUIStyleObject } from 'theme-ui';
 import type { ThemeColors } from '../types';
+import type { ThemeUIStyleObject } from 'theme-ui';
 
 
 export type ButtonVariants = 'contained' | 'outlined' | 'text';

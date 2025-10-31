@@ -1,7 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { ThemeUIProvider } from 'theme-ui';
-import { Typography } from './Typography';
+
 import { DefaultTheme } from '@/theme';
+
+import { Typography } from './Typography';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const ThemeDecorator = (Story: () => React.ReactNode) => (
   <ThemeUIProvider theme={DefaultTheme}>

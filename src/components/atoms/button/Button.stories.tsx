@@ -1,8 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { ThemeUIProvider } from 'theme-ui';
-import { Button } from './Button';
-import { DefaultTheme } from '@/theme';
 import { Download, ArrowRight } from 'lucide-react';
+import { ThemeUIProvider } from 'theme-ui';
+
+import { DefaultTheme } from '@/theme';
+
+import { Button } from './Button';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const ThemeDecorator = (Story: () => React.ReactNode) => (
   <ThemeUIProvider theme={DefaultTheme}>

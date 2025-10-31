@@ -41,6 +41,7 @@
   },
   "include": [
     "src",
-    "./jest.setup.ts"
+    "./jest.setup.ts",
+    "./declaration-files/*.d.ts"
   ]
 }
