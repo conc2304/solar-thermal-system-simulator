@@ -1,6 +1,8 @@
 import React, { forwardRef } from 'react';
 import { useThemeUI, type ThemeUICSSObject } from 'theme-ui';
 import { get } from '@theme-ui/css';
+import type { ThemeColors } from '@/theme';
+import type { Property } from 'csstype';
 
 type TypographyVariant =
   | 'h1'
@@ -13,34 +15,16 @@ type TypographyVariant =
   | 'caption'
   | 'overline';
 
-type TextAlign = 'left' | 'right' | 'center' | 'justify';
-type TextTransform = 'uppercase' | 'lowercase' | 'capitalize';
-
 interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   variant?: TypographyVariant;
   component?: React.ElementType;
-  color?: string;
-  align?: TextAlign;
-  transform?: TextTransform;
-  gutterBottom?: boolean;
-  noWrap?: boolean;
+  color?: ThemeColors | Property.Color;
   sx?: ThemeUICSSObject;
 }
 
 export const Typography = forwardRef<HTMLElement, TypographyProps>(
   (
-    {
-      children,
-      variant = 'body',
-      component,
-      color,
-      align,
-      transform,
-      gutterBottom,
-      noWrap,
-      sx,
-      ...rest
-    },
+    { children, variant = 'body', component, color = 'text', sx, ...rest },
     ref
   ) => {
     const theme = useThemeUI();
@@ -49,45 +33,15 @@ export const Typography = forwardRef<HTMLElement, TypographyProps>(
       component ||
       (variant.startsWith('h') ? (variant as React.ElementType) : 'p');
 
-    // Base styles
-    const baseStyles: ThemeUICSSObject = {
-      margin: 0,
-      // Default text styles
-      fontFamily: 'body',
-      lineHeight: 'body',
-      fontWeight: 'body',
-    };
-
     // Get variant styles from theme
-    const variantStyles = get(theme, `typography.${variant}`) || {};
-
-    // Conditional styles
-    const conditionalStyles: ThemeUICSSObject = {
-      // Color handling
-      ...(color && { color: get(theme, `colors.${color}`, color) }),
-
-      // Text alignment
-      ...(align && { textAlign: align }),
-
-      // Text transform
-      ...(transform && { textTransform: transform }),
-
-      // Gutter bottom (margin)
-      ...(gutterBottom && { marginBottom: 3 }),
-
-      // No wrap
-      ...(noWrap && {
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-      }),
-    };
+    const variantStyles = get(theme, `text.base`) || {};
+    const baseStyles = get(theme, `text.${variant}`) || {};
 
     // Combine all styles
     const combinedStyles: ThemeUICSSObject = {
       ...baseStyles,
       ...variantStyles,
-      ...conditionalStyles,
+      color,
       ...sx,
     };
 
