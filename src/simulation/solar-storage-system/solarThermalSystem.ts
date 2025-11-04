@@ -1,12 +1,11 @@
+import { FLUIDS } from '../constants';
 import {
   BaseSystemEntity,
   CirculationPump,
-  FLUIDS,
   HeatSource,
   SolarPanel,
   StorageTank,
   ThermalPipe,
-  type FluidProperties,
 } from '../entities';
 import {
   MillisecondsPerMinute,
@@ -16,6 +15,7 @@ import {
 
 import type {
   Energy,
+  FluidProperties,
   SimulationConfig,
   TemperatureCelsius,
   Time,
@@ -123,7 +123,7 @@ export class SolarThermalSystem {
       workingFluid: systemConfig.workingFluid ?? FLUIDS.water,
     };
 
-    // Instantiate System Components
+    // Instantiate System Components //
 
     this.heatSource = new HeatSource({
       maxIntensity: 1000, // W/m²
