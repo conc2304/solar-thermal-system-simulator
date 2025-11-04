@@ -51,7 +51,6 @@ interface CirculationState {
   pumpRunning: boolean;
   pumpMode: 'auto' | 'manual' | 'off';
   flowRate: number; // m³/s
-  // pumpPower: number; // W
   temperatureDifference: TemperatureCelsius;
 }
 
