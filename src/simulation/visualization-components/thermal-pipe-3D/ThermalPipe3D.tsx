@@ -64,8 +64,11 @@ export const ThermalPipe3D = ({
       >
         <meshStandardMaterial
           color={pipeColor}
+          transparent={true}
+          opacity={0.5}
           metalness={0.8}
           roughness={0.2}
+          side={THREE.DoubleSide} // Renders both inside and outside
         />
         <tubeGeometry
           args={[pipePath, pipeSegments, pipeRadius, radialSegments, closed]}

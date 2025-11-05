@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 
@@ -9,8 +9,6 @@ interface FluidFlowProps {
   temperature: TemperatureCelsius;
   path: THREE.Curve<THREE.Vector3>;
   speedScale?: number;
-  pipeRadius?: number;
-  offsetRadius?: number;
 }
 
 export const FluidFlow = ({
@@ -18,8 +16,6 @@ export const FluidFlow = ({
   temperature,
   path,
   speedScale = 50,
-  pipeRadius = 0.3,
-  offsetRadius = 1.5,
 }: FluidFlowProps) => {
   const particlesRef = useRef<THREE.Mesh[]>([]);
   const groupRef = useRef<THREE.Group>(null);
@@ -35,28 +31,6 @@ export const FluidFlow = ({
     Array.from({ length: particleCount }, (_, i) => i / particleCount)
   );
 
-  // Helper to calculate offset normal vector perpendicular to the pipe
-  const getOffsetPosition = (progress: number): THREE.Vector3 => {
-    const centerPosition = path.getPointAt(progress);
-    const tangent = path.getTangentAt(progress).normalize();
-
-    // Create a normal vector perpendicular to the tangent
-    // Use a reference vector that's not parallel to the tangent
-    const up =
-      Math.abs(tangent.y) < 0.99
-        ? new THREE.Vector3(0, 1, 0)
-        : new THREE.Vector3(1, 0, 0);
-
-    const normal = new THREE.Vector3().crossVectors(tangent, up).normalize();
-
-    // Offset the position by the offset radius
-    const offsetPosition = centerPosition
-      .clone()
-      .add(normal.multiplyScalar(pipeRadius * offsetRadius));
-
-    return offsetPosition;
-  };
-
   useFrame((_state, delta) => {
     if (flowRate === 0) return;
 
@@ -70,8 +44,8 @@ export const FluidFlow = ({
 
       progressRef.current[i] = progress;
 
-      // Place on curve with offset
-      const position = getOffsetPosition(progress);
+      // Place on curve
+      const position = path.getPointAt(progress);
       particle.position.copy(position);
     });
   });
@@ -82,10 +56,15 @@ export const FluidFlow = ({
   };
 
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} position={[0, 0, 0]}>
       {particles.map((p, i) => (
-        <mesh key={p.id} ref={(el) => (particlesRef.current[i] = el)}>
-          <sphereGeometry args={[0.05, 8, 8]} />
+        <mesh
+          key={p.id}
+          ref={(el) => {
+            if (el) particlesRef.current[i] = el;
+          }}
+        >
+          <sphereGeometry args={[0.1, 8, 8]} />
           <meshStandardMaterial
             color={getFluidColor(temperature)}
             emissive={getFluidColor(temperature)}
