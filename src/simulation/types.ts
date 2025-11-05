@@ -23,3 +23,5 @@ export interface WorkingFluid {
   specificHeatCapacity: number; // J/(kg·K)
   density: number; // kg/m³
 }
+
+export type Vector3Array = [x: number, y: number, z: number];

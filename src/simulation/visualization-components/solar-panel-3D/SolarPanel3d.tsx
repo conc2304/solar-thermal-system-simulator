@@ -52,7 +52,7 @@ export const SolarPanel3D = ({
         object={obj}
         scale={scale}
       />
-      temperature outletTemp energyCaptured
+
       {showLabels && (
         <Billboard follow={true} lockX={false} lockY={false} lockZ={false}>
           <group>

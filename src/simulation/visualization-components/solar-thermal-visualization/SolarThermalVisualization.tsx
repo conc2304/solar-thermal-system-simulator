@@ -85,6 +85,7 @@ export const SolarThermalVisualization = () => {
               />
               <OrbitControls target={[0, 0, 0]} />
             </Canvas>
+
             <div
               sx={{
                 position: 'absolute',
