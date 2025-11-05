@@ -6,10 +6,12 @@ import type { ThreeEvent } from '@react-three/fiber';
 import type { TemperatureCelsius } from '@/simulation/types';
 import { getColorForTemp } from '@/simulation/utils';
 
+import { FluidFlow } from '../fluid-flow/FluidFlow';
+
 interface ThermalPipe3DProps {
   pipeTemp: TemperatureCelsius;
   flowRate: number;
-  pathPoints: [x: number, y: number, z: number][];
+  pathPoints: THREE.Vector3Tuple[];
   pipeRadius?: number;
 }
 
@@ -86,7 +88,7 @@ export const ThermalPipe3D = ({
       )}
 
       {/* Flow Visualization */}
-      {/* {flowRate > 0 && (
+      {flowRate > 0 && (
         <>
           <FluidFlow
             path={pipePath}
@@ -94,7 +96,7 @@ export const ThermalPipe3D = ({
             temperature={pipeTemp}
           />
         </>
-      )} */}
+      )}
     </group>
   );
 };
