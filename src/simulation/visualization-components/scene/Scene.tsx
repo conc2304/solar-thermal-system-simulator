@@ -58,7 +58,7 @@ export const Scene = ({
 
   // Get middle of outlet pipe
   const circulationPumpPosition = new THREE.Vector3(
-    ...outletPath[outletPath.length / 2 - 1]
+    ...outletPath[Math.ceil(outletPath.length / 2) - 1]
   );
   circulationPumpPosition.setComponent(1, -0.2); // Manually align pump to pip
 
@@ -122,6 +122,8 @@ export const Scene = ({
         position={circulationPumpPosition}
         rotation={[0, Math.PI / 2, 0]}
         scale={0.5}
+        isRunning={systemState.pumpRunning}
+        mode={systemState.pumpMode}
       />
     </>
   );

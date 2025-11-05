@@ -4,6 +4,7 @@ import { Billboard, Text } from '@react-three/drei';
 import type { ThreeEvent } from '@react-three/fiber';
 
 import type { Energy, TemperatureCelsius } from '@/simulation/types';
+import { getColorForTemp } from '@/simulation/utils';
 
 interface StorageTank3DProps {
   position?: [number, number, number];
@@ -108,10 +109,3 @@ export const StorageTank3D = ({
     </group>
   );
 };
-
-function getColorForTemp(temp: number) {
-  const normalized = Math.min(Math.max((temp - 20) / 60, 0), 1);
-  const hue = 0.6 - normalized * 0.6; // Blue to red
-  const color = new THREE.Color().setHSL(hue, 0.8, 0.5);
-  return `rgb(${color.r * 255}, ${color.g * 255}, ${color.b * 255})`;
-}

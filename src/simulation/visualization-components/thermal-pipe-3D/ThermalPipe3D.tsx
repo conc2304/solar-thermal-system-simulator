@@ -1,8 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import * as THREE from 'three';
-import type { Vector3 } from '@react-three/fiber';
+import { Billboard, Text } from '@react-three/drei';
+import type { ThreeEvent } from '@react-three/fiber';
 
 import type { TemperatureCelsius } from '@/simulation/types';
+import { getColorForTemp } from '@/simulation/utils';
 
 interface ThermalPipe3DProps {
   pipeTemp: TemperatureCelsius;
@@ -17,6 +19,8 @@ export const ThermalPipe3D = ({
   pathPoints,
   pipeRadius = 0.3,
 }: ThermalPipe3DProps) => {
+  const [showLabels, setShowLabels] = useState(false);
+
   const pipeSegments = 32;
   const radialSegments = 8;
   const closed = false;
@@ -31,16 +35,55 @@ export const ThermalPipe3D = ({
     return curve;
   }, [pathPoints]);
 
+  const pipeColor = useMemo(() => getColorForTemp(pipeTemp), [pipeTemp]);
+
+  // Handle pointer over
+  const handlePointerOver = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+    setShowLabels(true);
+    document.body.style.cursor = 'pointer';
+  };
+
+  // Handle pointer out
+  const handlePointerOut = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+    setShowLabels(false);
+    document.body.style.cursor = 'default';
+  };
+
   return (
     <group>
       {/* Pipe Geometry */}
-      <mesh castShadow receiveShadow>
-        {/* TODO - update to use temp color */}
-        <meshStandardMaterial color="#7F8C8D" metalness={0.8} roughness={0.2} />
+      <mesh
+        castShadow
+        receiveShadow
+        onPointerOver={handlePointerOver}
+        onPointerOut={handlePointerOut}
+      >
+        <meshStandardMaterial
+          color={pipeColor}
+          metalness={0.8}
+          roughness={0.2}
+        />
         <tubeGeometry
           args={[pipePath, pipeSegments, pipeRadius, radialSegments, closed]}
         />
       </mesh>
+
+      {/* Labels */}
+      {showLabels && (
+        <Billboard follow={true} lockX={false} lockY={false} lockZ={false}>
+          <group>
+            <Text position={[0, 3, 0]} fontSize={0.8} color="red">
+              {`Temp: ${pipeTemp.toFixed(1)}°C`}
+            </Text>
+
+            <Text position={[0, 4, 0]} fontSize={0.8} color="cyan">
+              {`Flow Rate: ${flowRate} L/s`}
+            </Text>
+          </group>
+        </Billboard>
+      )}
 
       {/* Flow Visualization */}
       {/* {flowRate > 0 && (
