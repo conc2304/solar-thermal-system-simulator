@@ -1,10 +1,9 @@
 import { useMemo, useRef, useState } from 'react';
-import { Billboard, Text } from '@react-three/drei';
 import * as THREE from 'three';
+import { Billboard, Text } from '@react-three/drei';
+import type { ThreeEvent } from '@react-three/fiber';
 
 import type { Energy, TemperatureCelsius } from '@/simulation/types';
-
-import type { ThreeEvent } from '@react-three/fiber';
 
 interface StorageTank3DProps {
   position?: [number, number, number];

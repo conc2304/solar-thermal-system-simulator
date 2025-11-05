@@ -45,17 +45,30 @@ export default defineConfig([
           'newlines-between': 'always',
           distinctGroup: false,
           pathGroups: [
+            // React at the top of externals
             {
               pattern: 'react',
               group: 'external',
               position: 'before',
             },
-
+            // Three.js related imports after React
+            {
+              pattern: 'three',
+              group: 'external',
+              position: 'before',
+            },
+            {
+              pattern: '@react-three/**',
+              group: 'external',
+              position: 'before',
+            },
+            // Internal paths starting with @/**
             {
               pattern: '@/**',
               group: 'internal',
               position: 'before',
             },
+            // Style/CSS imports at the end
             {
               pattern: '**/*.+(css|sass|less|scss|pcss|styl)',
               patternOptions: {
