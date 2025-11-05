@@ -6,6 +6,7 @@ import type {
 } from '@/simulation/solar-storage-system';
 
 import { SolarPanel3D } from '../solar-panel-3D';
+import { StorageTank3D } from '../storage-tank-3D';
 import { Sun3D } from '../sun-3D';
 
 interface SceneProps {
@@ -37,8 +38,8 @@ export const Scene = ({
 
       {/* Ground Plane */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-        <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial color="#b4e2c2" />
+        <planeGeometry args={[20, 25]} />
+        <meshStandardMaterial color="#b4e2c2" metalness={0.2} roughness={0.8} />
       </mesh>
 
       {/* Solar Thermal System Components  */}
@@ -56,6 +57,17 @@ export const Scene = ({
         solarRadiation={systemState.solarRadiation}
         timeOfDayMinutes={systemState.timeOfDayMinutes}
         orbitRadius={12}
+      />
+
+      <StorageTank3D
+        height={6}
+        radius={3}
+        position={[0, 3, 8]}
+        rotation={[0, 0, 0]}
+        temperature={systemState.tankTemperature}
+        topTemp={systemState.tankTopTemp}
+        bottomTemp={systemState.tankBottomTemp}
+        storedEnergy={systemState.storedEnergy}
       />
     </>
   );

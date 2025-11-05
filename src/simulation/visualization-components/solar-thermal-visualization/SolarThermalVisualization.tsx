@@ -59,7 +59,6 @@ export const SolarThermalVisualization = () => {
               width: '100%',
               height: '100%',
               position: 'relative',
-
               border: '2px solid',
               borderRadius: 8,
               borderColor: 'secondary',
