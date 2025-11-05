@@ -1,8 +1,8 @@
-import type { Vector3Array } from '@/simulation/types';
+import type { Vector3Tuple } from 'three';
 
 export interface PipePathConfig {
-  solarPanelPosition: Vector3Array;
-  tankPosition: Vector3Array;
+  solarPanelPosition: Vector3Tuple;
+  tankPosition: Vector3Tuple;
   tankHeight: number;
   tankRadius: number;
   pipeRadius: number;

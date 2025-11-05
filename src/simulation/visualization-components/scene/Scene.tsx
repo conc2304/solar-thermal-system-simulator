@@ -6,7 +6,6 @@ import type {
   SolarThermalSystem,
   SystemState,
 } from '@/simulation/solar-storage-system';
-import type { Vector3Array } from '@/simulation/types';
 
 import { CirculationPump3d } from '../circulation-pump-3D';
 import { SolarPanel3D } from '../solar-panel-3D';
@@ -38,8 +37,8 @@ export const Scene = ({
   });
 
   // Mesh Positions
-  const solarPanelPosition: Vector3Array = [0, 0, -8];
-  const tankPosition: Vector3Array = [0, 3, 8];
+  const solarPanelPosition: THREE.Vector3Tuple = [0, 0, -8];
+  const tankPosition: THREE.Vector3Tuple = [0, 3, 8];
   const tankHeight = 6;
   const tankRadius = 3;
   const pipeRadius = 0.3;

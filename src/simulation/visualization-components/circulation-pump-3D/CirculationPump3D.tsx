@@ -1,15 +1,13 @@
 import { useState } from 'react';
-import type { Vector3 } from 'three';
+import type { Vector3, Vector3Tuple } from 'three';
 import { Billboard, Text } from '@react-three/drei';
 import { useLoader, type ThreeEvent } from '@react-three/fiber';
 import { FBXLoader } from 'three/examples/jsm/Addons.js';
 
-import type { Vector3Array } from '@/simulation/types';
-
 interface CirculationPump3dProps {
-  position: Vector3Array | Vector3;
-  rotation: Vector3Array;
-  isRunning?: string;
+  position: Vector3Tuple | Vector3;
+  rotation: Vector3Tuple;
+  isRunning?: boolean;
   mode?: string;
   scale?: number;
 }
@@ -60,7 +58,7 @@ export const CirculationPump3d = ({
       {showLabels && (
         <Billboard follow={true} lockX={false} lockY={false} lockZ={false}>
           <group>
-            {isRunning && (
+            {isRunning !== undefined && (
               <Text
                 position={[0, 3, 0]}
                 fontSize={0.8}
