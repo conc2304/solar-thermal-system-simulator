@@ -56,7 +56,7 @@ export const Scene = ({
         solarIntensity={systemState.solarIntensity}
         solarRadiation={systemState.solarRadiation}
         timeOfDayMinutes={systemState.timeOfDayMinutes}
-        orbitRadius={12}
+        orbitRadius={13}
       />
 
       <StorageTank3D
