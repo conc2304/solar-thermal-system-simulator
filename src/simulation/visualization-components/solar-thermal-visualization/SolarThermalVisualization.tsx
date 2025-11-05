@@ -6,14 +6,15 @@ import { Typography } from '@/components';
 import {
   PlaybackControls,
   SimulationRuntimeState,
+  DataTable,
 } from '@/components/molecules';
-import { SystemMetrics } from '@/components/molecules/system-metrics/SystemMetrics';
 import {
   SolarThermalSystem,
   type SystemState,
 } from '@/simulation/solar-storage-system';
 import { minutesToHHMMSS } from '@/simulation/utils';
 
+import { DEFAULT_SYSTEM_STATE_METRICS } from '../defaultSystemStateMetrics';
 import { Scene } from '../scene';
 
 export const SolarThermalVisualization = () => {
@@ -31,6 +32,7 @@ export const SolarThermalVisualization = () => {
   const [systemState, setSystemState] = useState<SystemState>(
     systemRef.current.getSystemState()
   );
+
   const [timeScale, setTimeScale] = useState<number>(1000);
   const timeScaleMin = 1;
   const timeScaleMax = 10000;
@@ -137,7 +139,10 @@ export const SolarThermalVisualization = () => {
             Simulation Controls
           </Typography>
 
-          <SystemMetrics systemState={systemState} />
+          <DataTable
+            data={systemState}
+            metrics={DEFAULT_SYSTEM_STATE_METRICS}
+          />
         </div>
       </div>
     </div>

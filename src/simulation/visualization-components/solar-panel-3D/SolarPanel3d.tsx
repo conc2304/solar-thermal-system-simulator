@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Billboard, Text } from '@react-three/drei';
 import { useLoader, type ThreeEvent } from '@react-three/fiber';
-import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/Addons.js';
 
 import type { Energy, TemperatureCelsius } from '@/simulation/types';
@@ -22,6 +21,7 @@ export const SolarPanel3D = ({
   outletTemp,
   energyCaptured,
 }: SolarPanel3DProps) => {
+  // Load Model
   const objPath = './models-3d/Solar_System/Solar_System.fbx';
   const obj = useLoader(FBXLoader, objPath);
 
