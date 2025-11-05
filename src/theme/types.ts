@@ -1,8 +1,10 @@
-export type ThemeSizes = 'sm' | 'md' | 'lg';
-export type ThemeColors = 'background' |
-  'text' |
-  'primary' |
-  'secondary' |
-  'accent' |
-  'highlight' |
-  'muted';
+export type ThemeSize = 'sm' | 'md' | 'lg';
+export type ThemeColor =
+  | 'background'
+  | 'text'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'highlight'
+  | 'muted'
+  | 'error';

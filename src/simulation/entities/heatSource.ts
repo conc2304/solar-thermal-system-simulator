@@ -2,7 +2,7 @@ import perlin from 'perlin-noise';
 import { v4 as uuidv4 } from 'uuid';
 
 import { BaseSystemEntity } from './baseSystemEntity';
-import { MinutesPerDay } from '../timeConstants';
+import { MinutesPerDay } from '../constants';
 
 import type { Energy, SimulationConfig, Time } from '../types';
 
@@ -37,7 +37,7 @@ export class HeatSource extends BaseSystemEntity {
 
     if (config.daylight) {
       // Map noise to a more realistic solar intensity curve
-      const noiseValue = this.dailyIntensityNoise[minuteOfDay];
+      const noiseValue = this.dailyIntensityNoise[Math.floor(minuteOfDay)];
 
       // Adjust the noise to create a more natural solar intensity curve
       const noiseWeight = 0.3;

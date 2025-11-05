@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import { get } from '@theme-ui/css';
 import { useThemeUI, type ThemeUICSSObject } from 'theme-ui';
 
-import type { ThemeColors } from '@/theme';
+import type { ThemeColor } from '@/theme';
 
 import type { Property } from 'csstype';
 
@@ -20,7 +20,7 @@ type TypographyVariant =
 interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   variant?: TypographyVariant;
   component?: React.ElementType;
-  color?: ThemeColors | Property.Color;
+  color?: ThemeColor | Property.Color;
   sx?: ThemeUICSSObject;
 }
 

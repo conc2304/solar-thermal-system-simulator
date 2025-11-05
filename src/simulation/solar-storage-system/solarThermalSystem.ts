@@ -1,4 +1,9 @@
-import { FLUIDS } from '../constants';
+import {
+  FLUIDS,
+  MillisecondsPerMinute,
+  MinutesPerDay,
+  MinutesPerHour,
+} from '../constants';
 import {
   BaseSystemEntity,
   CirculationPump,
@@ -7,21 +12,18 @@ import {
   StorageTank,
   ThermalPipe,
 } from '../entities';
-import {
-  MillisecondsPerMinute,
-  MinutesPerDay,
-  MinutesPerHour,
-} from '../timeConstants';
 
 import type {
   Energy,
   FluidProperties,
   SimulationConfig,
+  SimulationStatus,
   TemperatureCelsius,
   Time,
 } from '../types';
 
 interface TimeState {
+  timeOfDayMinutes: number;
   simulationTime: number;
   isPaused: boolean;
 }
@@ -109,7 +111,7 @@ export class SolarThermalSystem {
   // Simulation controls
   private simulationTime: number = 0;
   private isPaused: boolean = false;
-  private isRunning: boolean = false;
+  private isRunning: boolean = true;
 
   private config: SimulationConfig;
 
@@ -279,6 +281,12 @@ export class SolarThermalSystem {
     this.circulationPump.stop();
   }
 
+  public getRunState(): SimulationStatus {
+    if (!this.isPaused && this.isRunning) return 'Running';
+    else if (this.isPaused && this.isRunning) return 'Paused';
+    else return 'Stopped';
+  }
+
   // System State Getter
   // Get complete system state for UI
   public getSystemState(): SystemState {
@@ -296,6 +304,7 @@ export class SolarThermalSystem {
     return {
       // Time
       simulationTime: this.simulationTime,
+      timeOfDayMinutes: this.config.timeOfDayMinutes,
       isPaused: this.isPaused,
 
       // Environment

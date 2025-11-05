@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet';
 import { useThemeUI } from 'theme-ui';
 
 import { ColorModeToggle } from './components/molecules';
-import { SolarPanelSimulation } from './components/pages/solar-panel-simulation';
+import { SolarPanelSimulationPage } from './components/pages';
 
 function App() {
   const { theme } = useThemeUI();
@@ -13,9 +13,17 @@ function App() {
         <meta name="theme-color" content={theme.colors?.primary?.toString()} />
       </Helmet>
 
-      <ColorModeToggle />
+      <ColorModeToggle
+        sxStyles={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          p: 2,
+          m: 3,
+        }}
+      />
 
-      <SolarPanelSimulation />
+      <SolarPanelSimulationPage />
     </>
   );
 }

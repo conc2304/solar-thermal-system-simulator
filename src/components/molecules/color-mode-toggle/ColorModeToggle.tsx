@@ -1,23 +1,38 @@
 import { Moon, Sun } from 'lucide-react';
-import { useColorMode } from 'theme-ui';
+import { useColorMode, type ThemeUICSSObject } from 'theme-ui';
 
 import { Button } from '@/components/atoms';
 
-export const ColorModeToggle = () => {
+interface ColorModeToggleProps {
+  /** Additional sx prop for custom styling */
+  sxStyles?: ThemeUICSSObject;
+  onClick?: (mode: 'dark' | 'light') => void;
+}
+
+export const ColorModeToggle = ({
+  sxStyles,
+  onClick,
+}: ColorModeToggleProps) => {
   const [mode, setMode] = useColorMode();
+
+  const handleOnClick = () => {
+    const next = mode === 'dark' ? 'light' : 'dark';
+    setMode(next);
+
+    if (onClick) onClick(next);
+  };
 
   return (
     <Button
       sx={{
         borderRadius: 'pill',
+        ...sxStyles,
       }}
       variant="outlined"
       size="sm"
       color="primary"
-      onClick={() => {
-        const next = mode === 'dark' ? 'light' : 'dark';
-        setMode(next);
-      }}
+      onClick={handleOnClick}
+      className="ColorModeToggle--root"
     >
       {mode === 'light' ? (
         <Sun sx={{ color: 'inherit' }} />

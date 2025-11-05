@@ -1,19 +1,23 @@
-import type { ThemeColors } from '../types';
+import type { ThemeColor } from '../types';
 import type { ThemeUIStyleObject } from 'theme-ui';
-
 
 export type ButtonVariants = 'contained' | 'outlined' | 'text';
 
-export const getVariantKey = ({ variant, color }: { variant: ButtonVariants, color: ThemeColors; }) => {
+export const getVariantKey = ({
+  variant,
+  color,
+}: {
+  variant: ButtonVariants;
+  color: ThemeColor;
+}) => {
   return `${variant}_${color}`;
 };
 
 // Helper function to create color-specific variant styles since color and variant styles are intertwined
 const createColorVariants = (
-  colorKey: ThemeColors
+  colorKey: ThemeColor
 ): Record<string, ThemeUIStyleObject> => ({
-
-  [ getVariantKey({ variant: 'contained', color: colorKey }) ]: {
+  [getVariantKey({ variant: 'contained', color: colorKey })]: {
     backgroundColor: colorKey,
     borderColor: colorKey,
     color: 'white',
@@ -29,7 +33,7 @@ const createColorVariants = (
       cursor: 'not-allowed',
     },
   },
-  [ getVariantKey({ variant: 'outlined', color: colorKey }) ]: {
+  [getVariantKey({ variant: 'outlined', color: colorKey })]: {
     backgroundColor: 'transparent',
     border: '1px solid',
     borderColor: colorKey,
@@ -48,7 +52,7 @@ const createColorVariants = (
       cursor: 'not-allowed',
     },
   },
-  [ getVariantKey({ variant: 'text', color: colorKey }) ]: {
+  [getVariantKey({ variant: 'text', color: colorKey })]: {
     backgroundColor: 'transparent',
     borderColor: 'transparent',
     color: colorKey,
@@ -84,28 +88,28 @@ export const ButtonVariants: Record<string, ThemeUIStyleObject> = {
   // Size variants
   sizes: {
     sm: {
-      fontSize: 0,  // 12px // maps to fontsize array index
-      py: 1,        // 4px
-      px: 2,        // 8px
+      fontSize: 0, // 12px // maps to fontsize array index
+      py: 1, // 4px
+      px: 2, // 8px
     },
     md: {
-      fontSize: 1,  // 14px
-      py: 2,        // 8px
-      px: 2,        // 8px
+      fontSize: 1, // 14px
+      py: 2, // 8px
+      px: 2, // 8px
     },
     lg: {
-      fontSize: 3,  // 20px
-      py: 2,        // 8px
-      px: 3,        // 12px
+      fontSize: 3, // 20px
+      py: 2, // 8px
+      px: 3, // 12px
     },
   },
 
   // Color-specific variants for all appearance types
   ...createColorVariants('primary'),
   ...createColorVariants('secondary'),
-  ...createColorVariants('accent'),
+  ...createColorVariants('success'),
   ...createColorVariants('text'),
   ...createColorVariants('background'),
   ...createColorVariants('muted'),
+  ...createColorVariants('error'),
 };
-

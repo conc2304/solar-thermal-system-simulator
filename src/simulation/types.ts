@@ -2,6 +2,7 @@ export type TemperatureCelsius = number;
 export type Energy = number;
 export type Time = number;
 
+export type SimulationStatus = 'Running' | 'Paused' | 'Stopped';
 export interface SimulationConfig {
   ambientTemperature: TemperatureCelsius;
   daylight: boolean;

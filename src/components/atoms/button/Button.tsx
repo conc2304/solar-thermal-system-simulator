@@ -2,22 +2,17 @@ import React, { forwardRef } from 'react';
 import { get } from '@theme-ui/css';
 import { useThemeUI, type ThemeUICSSObject } from 'theme-ui';
 
-import type { ThemeColors, ThemeSizes } from '@/theme';
+import type { ThemeColor, ThemeSize } from '@/theme';
 import { getVariantKey, type ButtonVariants } from '@/theme/component-variants';
 
-// Button component props
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /** Button variant */
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariants;
-  /** Button color variant */
-  color?: ThemeColors;
-  /** Button size variant */
-  size?: ThemeSizes;
+  color?: ThemeColor;
+  size?: ThemeSize;
   /** Additional sx prop for custom styling */
   sx?: ThemeUICSSObject;
-  /** Icon to display before button text */
   leftIcon?: React.ReactNode;
-  /** Icon to display after button text */
   rightIcon?: React.ReactNode;
 }
 

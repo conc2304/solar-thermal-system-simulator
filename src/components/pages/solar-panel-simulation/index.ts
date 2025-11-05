@@ -1,1 +1,1 @@
-export * from './SolarPanelSimulation';
+export * from './SolarPanelSimulationPage';
