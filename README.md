@@ -6,6 +6,10 @@ Interactive 3D simulation of a solar thermal heating system with real-time physi
 
 This application simulates a complete solar thermal system including solar collectors, storage tank, circulation pump, and piping. The simulation models thermodynamic behavior in real-time and renders it in an interactive 3D environment.
 
+## Live Demo
+
+[View the running application](https://conc2304.github.io/solar-thermal-system-simulator/)
+
 ## Tech Stack
 
 ### Core Framework

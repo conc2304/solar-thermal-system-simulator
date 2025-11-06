@@ -14,7 +14,7 @@ const dirname =
     : path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  base: '/solar-thermal-system-simulator/',
+  base: './', // matches gh-pages deploy target
 
   plugins: [
     react({
