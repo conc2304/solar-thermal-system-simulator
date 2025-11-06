@@ -11,7 +11,9 @@
     "test": "jest",
     "coverage": "jest --coverage --collectCoverageFrom='src/*/**/*.{ts,tsx}'",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -62,6 +64,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "eslint-plugin-storybook": "^10.0.2",
+    "gh-pages": "^6.3.0",
     "globals": "^16.4.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.2.0",
