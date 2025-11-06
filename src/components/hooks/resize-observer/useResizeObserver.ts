@@ -6,9 +6,11 @@ import ResizeObserver from 'resize-observer-polyfill';
  * Doesn't play well with SVG.
  */
 
-export const useResizeObserver = (ref) => {
-  const [dimensions, setDimensions] = useState(null);
+export const useResizeObserver = (ref: React.RefObject<HTMLElement> | null) => {
+  const [dimensions, setDimensions] = useState<DOMRectReadOnly | null>(null);
   useEffect(() => {
+    if (!ref) return;
+
     const observeTarget = ref.current;
     const resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
@@ -20,5 +22,8 @@ export const useResizeObserver = (ref) => {
       resizeObserver.unobserve(observeTarget);
     };
   }, [ref]);
+
+  if (!ref) return null;
+
   return dimensions;
 };

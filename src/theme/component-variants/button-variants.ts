@@ -21,16 +21,17 @@ const createColorVariants = (
     backgroundColor: colorKey,
     borderColor: colorKey,
     color: 'white',
-    '&:hover': {
+    '&:hover:not(:disabled)': {
       backgroundColor: colorKey,
       filter: 'brightness(0.9)',
     },
-    '&:active': {
+    '&:active:not(:disabled)': {
       filter: 'brightness(0.85)',
     },
     '&:disabled': {
       opacity: 0.6,
       cursor: 'not-allowed',
+      pointerEvents: 'none',
     },
   },
   [getVariantKey({ variant: 'outlined', color: colorKey })]: {
@@ -38,11 +39,11 @@ const createColorVariants = (
     border: '1px solid',
     borderColor: colorKey,
     color: colorKey,
-    '&:hover': {
+    '&:hover:not(:disabled)': {
       backgroundColor: colorKey,
       color: 'white',
     },
-    '&:active': {
+    '&:active:not(:disabled)': {
       backgroundColor: colorKey,
       color: 'white',
       filter: 'brightness(0.9)',
@@ -50,23 +51,25 @@ const createColorVariants = (
     '&:disabled': {
       opacity: 0.6,
       cursor: 'not-allowed',
+      pointerEvents: 'none',
     },
   },
   [getVariantKey({ variant: 'text', color: colorKey })]: {
     backgroundColor: 'transparent',
     borderColor: 'transparent',
     color: colorKey,
-    '&:hover': {
+    '&:hover:not(:disabled)': {
       backgroundColor: colorKey,
       color: 'white',
       opacity: 0.9,
     },
-    '&:active': {
+    '&:active:not(:disabled)': {
       opacity: 0.8,
     },
     '&:disabled': {
       opacity: 0.4,
       cursor: 'not-allowed',
+      pointerEvents: 'none',
     },
   },
 });

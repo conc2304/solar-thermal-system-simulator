@@ -18,7 +18,7 @@ interface StorageTankConfig {
 
 export class StorageTank extends BaseSystemEntity {
   public volume: number; // m³
-  private surfaceArea: number;
+  // private surfaceArea: number;
   public maxTemperature: TemperatureCelsius; // °C
   public uValue: number; // W/(m²·K)
   public storedEnergy: Energy; // J
@@ -33,7 +33,7 @@ export class StorageTank extends BaseSystemEntity {
     super({ id: `storage_tank-${uuidv4()}`, initialTemp });
 
     this.volume = config.volume ?? 0.2; // 200 liters
-    this.surfaceArea = this.calculateSurfaceArea(this.volume);
+    // this.surfaceArea = this.calculateSurfaceArea(this.volume);
 
     this.uValue = config.uValue ?? 0.3; // Well insulated
     this.maxTemperature = config.maxTemperature ?? 90;
@@ -74,10 +74,19 @@ export class StorageTank extends BaseSystemEntity {
     }
 
     // Clamp temperatures to reasonable bounds BEFORE calculations
-    const absoluteMin = -273;
-    this.temperature = Math.max(Math.min(this.temperature, this.maxTemperature), absoluteMin);
-    this.topTemperature = Math.max(Math.min(this.topTemperature, this.maxTemperature), absoluteMin);
-    this.bottomTemperature = Math.max(Math.min(this.bottomTemperature, this.maxTemperature), absoluteMin);
+    const absoluteMin = -50;
+    this.temperature = Math.max(
+      Math.min(this.temperature, this.maxTemperature),
+      absoluteMin
+    );
+    this.topTemperature = Math.max(
+      Math.min(this.topTemperature, this.maxTemperature),
+      absoluteMin
+    );
+    this.bottomTemperature = Math.max(
+      Math.min(this.bottomTemperature, this.maxTemperature),
+      absoluteMin
+    );
 
     if (this.flowRate > 0) {
       // Hot fluid entering tank
@@ -107,16 +116,19 @@ export class StorageTank extends BaseSystemEntity {
       // Smooth transition to target temperatures
       const stratificationRate = Math.min(1, 0.05 * deltaTime); // Cap at 100%
       this.topTemperature =
-        this.topTemperature + (targetTopTemp - this.topTemperature) * stratificationRate;
+        this.topTemperature +
+        (targetTopTemp - this.topTemperature) * stratificationRate;
       this.bottomTemperature =
-        this.bottomTemperature + (targetBottomTemp - this.bottomTemperature) * stratificationRate;
+        this.bottomTemperature +
+        (targetBottomTemp - this.bottomTemperature) * stratificationRate;
 
       this.outletTemperature = this.bottomTemperature;
     } else {
       // No flow: temperatures gradually equalize
       const mixingFactor = Math.min(0.05, 0.005 * deltaTime); // Slower mixing when no flow
       this.topTemperature =
-        this.topTemperature + (this.temperature - this.topTemperature) * mixingFactor;
+        this.topTemperature +
+        (this.temperature - this.topTemperature) * mixingFactor;
       this.bottomTemperature =
         this.bottomTemperature +
         (this.temperature - this.bottomTemperature) * mixingFactor;
@@ -143,7 +155,10 @@ export class StorageTank extends BaseSystemEntity {
     // Cap all temperatures at reasonable maximums to prevent overflow
     this.temperature = Math.min(this.temperature, this.maxTemperature);
     this.topTemperature = Math.min(this.topTemperature, this.maxTemperature);
-    this.bottomTemperature = Math.min(this.bottomTemperature, this.maxTemperature);
+    this.bottomTemperature = Math.min(
+      this.bottomTemperature,
+      this.maxTemperature
+    );
 
     // Ensure temperatures never go below absolute minimum (reuse absoluteMin from line 77)
     this.temperature = Math.max(this.temperature, absoluteMin);
@@ -248,11 +263,11 @@ export class StorageTank extends BaseSystemEntity {
     return this.storedEnergy / (3600 * 1000); // J to kWh
   }
 
-  private calculateSurfaceArea(volume: number): number {
-    // Simple approximation for cylindrical tank
-    const radius = Math.pow(volume / (Math.PI * 2), 1 / 3);
-    const height = 2 * radius;
-    const surfaceArea = 2 * Math.PI * radius * (radius + height);
-    return surfaceArea;
-  }
+  // private calculateSurfaceArea(volume: number): number {
+  //   // Simple approximation for cylindrical tank
+  //   const radius = Math.pow(volume / (Math.PI * 2), 1 / 3);
+  //   const height = 2 * radius;
+  //   const surfaceArea = 2 * Math.PI * radius * (radius + height);
+  //   return surfaceArea;
+  // }
 }

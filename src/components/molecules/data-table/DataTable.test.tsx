@@ -16,7 +16,14 @@ describe('DataTable', () => {
       <DataTable
         title="Test Metrics"
         data={{ value: 42 }}
-        metrics={[{ label: 'Value', getValue: (data) => String(data.value) }]}
+        metrics={[
+          {
+            label: 'Value',
+            getValue: (data) => String(data.value),
+            getRawValue: (data) => data.value,
+          },
+        ]}
+        maxStreamSize={50}
       />
     );
     expect(screen.getByText('Test Metrics')).toBeInTheDocument();
@@ -27,9 +34,18 @@ describe('DataTable', () => {
       <DataTable
         data={{ temp: 25, pressure: 100 }}
         metrics={[
-          { label: 'Temperature', getValue: (data) => `${data.temp}°C` },
-          { label: 'Pressure', getValue: (data) => `${data.pressure} kPa` },
+          {
+            label: 'Temperature',
+            getValue: (data) => `${data.temp}°C`,
+            getRawValue: (data) => data.temp,
+          },
+          {
+            label: 'Pressure',
+            getValue: (data) => `${data.pressure} kPa`,
+            getRawValue: (data) => data.pressure,
+          },
         ]}
+        maxStreamSize={50}
       />
     );
     expect(screen.getByText('Temperature:')).toBeInTheDocument();

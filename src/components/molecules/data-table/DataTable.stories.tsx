@@ -5,48 +5,55 @@ import { DefaultTheme } from '@/theme';
 import { DataTable, type MetricConfig } from './DataTable';
 
 import type { Meta, StoryObj } from '@storybook/react';
+import type { Decorator } from '@storybook/react';
 
-const ThemeDecorator = (Story: () => React.ReactNode) => (
+const ThemeDecorator: Decorator = (Story) => (
   <ThemeUIProvider theme={DefaultTheme}>
     <Story />
   </ThemeUIProvider>
 );
-
-const meta = {
-  title: 'Molecules/DataTable',
-  component: DataTable,
-  decorators: [ThemeDecorator],
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
-} satisfies Meta<typeof DataTable>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
 
 interface SampleData {
   temperature: number;
   pressure: number;
   status: string;
 }
+
+const meta: Meta<typeof DataTable<SampleData>> = {
+  title: 'Molecules/DataTable',
+  component: DataTable<SampleData>,
+  decorators: [ThemeDecorator],
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
 const metrics: MetricConfig<SampleData>[] = [
   {
     label: 'Temperature',
     getValue: (data: SampleData) => `${data.temperature}°C`,
+    getRawValue: (data: SampleData) => data.temperature,
   },
   {
     label: 'Pressure',
     getValue: (data: SampleData) => `${data.pressure} kPa`,
+    getRawValue: (data: SampleData) => data.pressure,
   },
-  { label: 'Status', getValue: (data: SampleData) => data.status },
+  {
+    label: 'Status',
+    getValue: (data: SampleData) => data.status,
+    getRawValue: (_data: SampleData) => 0, // Status is not numeric
+  },
 ];
 
 export const Default: Story = {
   args: {
     title: 'System Metrics',
     data: { temperature: 25, pressure: 101.3, status: 'normal' },
-    // @ts-expect-error - can't figure out how to type this generic component for the story
     metrics,
+    maxStreamSize: 50,
   },
 };

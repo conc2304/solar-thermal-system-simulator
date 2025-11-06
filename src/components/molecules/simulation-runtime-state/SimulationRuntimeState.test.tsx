@@ -33,7 +33,7 @@ describe('SimulationRuntimeState', () => {
     expect(screen.getByText('Running')).toBeInTheDocument();
     expect(screen.getByText(/Run Time:/)).toBeInTheDocument();
     expect(screen.getByText('1.50 s')).toBeInTheDocument();
-    expect(screen.getByText(/Simulation Time :/)).toBeInTheDocument();
+    expect(screen.getByText(/Simulation Time:/)).toBeInTheDocument();
     expect(screen.getByText('12:30:45')).toBeInTheDocument();
   });
 

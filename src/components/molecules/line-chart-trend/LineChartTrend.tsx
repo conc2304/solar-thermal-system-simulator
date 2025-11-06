@@ -1,8 +1,6 @@
 import { useRef, useEffect, useMemo } from 'react';
 import * as d3 from 'd3';
 
-import { useResizeObserver } from '@/components/hooks';
-
 interface Margin {
   top: number;
   bottom: number;
@@ -33,7 +31,6 @@ export const LineChartTrend = ({
 }: Props) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const dimensions = useResizeObserver(wrapperRef);
 
   // Memoize the display data to avoid recalculating on every render
   const displayData = useMemo(() => {
@@ -150,7 +147,7 @@ export const LineChartTrend = ({
         .call(yAxis as any);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataHash, margin, color, dimensions, width, height]);
+  }, [dataHash, margin, color, width, height]);
 
   return (
     <div

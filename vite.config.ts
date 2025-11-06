@@ -70,6 +70,7 @@ export default defineConfig({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
+    // TODO - look into why chunking breaks build
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -77,9 +78,16 @@ export default defineConfig({
           if (id.includes('node_modules')) {
             // Only chunk non-externalized vendor libraries
             if (id.includes('three') || id.includes('THREE')) {
+              if (id.includes('build')) return 'vendor-three-build';
               return 'vendor-three';
             }
 
+            if (
+              id.includes('node_modules/d3-') ||
+              id.includes('node_modules/d3/')
+            ) {
+              return 'vendor-d3';
+            }
             // Return undefined for other node_modules to let Vite handle them
             return undefined;
           }

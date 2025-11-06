@@ -140,6 +140,7 @@ export const DataTable = <T,>({
               value={metric.getValue(data)}
               valueColor={metric.getColor?.(data)}
               showChart={showCharts}
+              maxStreamSize={maxStreamSize}
               chartData={chartData.get(metric.label)}
             />
           ))}

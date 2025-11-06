@@ -24,7 +24,8 @@ export default {
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
     '^.+\\.svg$': 'jest-transformer-svg',
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^d3$': '<rootDir>/src/__mocks__/d3.ts',
   },
   // Add this to ensure setup files are transformed
-  transformIgnorePatterns: ['node_modules/(?!(@testing-library)/)'],
+  transformIgnorePatterns: ['node_modules/(?!(@testing-library|d3.*|internmap|delaunator|robust-predicates)/)'],
 };
