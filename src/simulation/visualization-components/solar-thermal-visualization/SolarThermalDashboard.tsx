@@ -161,6 +161,7 @@ export const SolarThermalDashboard = () => {
           sx={{
             border: '2px solid',
             borderColor: 'primary',
+            px: [2, 3, 4],
             borderRadius: 8,
             width: ['100%', '100%', '40%'], // Full width on mobile, 40% on desktop
             height: ['auto', 'auto', '100%'],
@@ -182,7 +183,7 @@ export const SolarThermalDashboard = () => {
           }}
         >
           {/* Close button for mobile */}
-          <button
+          <Button
             onClick={() => setIsMobileMenuOpen(false)}
             sx={{
               position: 'absolute',
@@ -191,22 +192,21 @@ export const SolarThermalDashboard = () => {
               backgroundColor: 'transparent',
               color: 'text',
               border: 'none',
-              fontSize: 24,
               cursor: 'pointer',
               display: ['block', 'block', 'none'],
               padding: 1,
-              lineHeight: 1,
             }}
             aria-label="Close menu"
           >
             ×
-          </button>
+          </Button>
 
           <ControlPanel system={systemRef.current} systemState={systemState} />
 
           <DataTable
             data={systemState}
             metrics={DEFAULT_SYSTEM_STATE_METRICS}
+            maxStreamSize={50}
           />
         </div>
       </div>

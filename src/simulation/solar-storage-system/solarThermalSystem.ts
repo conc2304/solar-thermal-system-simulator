@@ -75,7 +75,9 @@ export type SystemState = TimeState &
   StorageTankState &
   CirculationState &
   PipeState &
-  SystemEfficiencyState;
+  SystemEfficiencyState & {
+    instantaneousPowerTransfer: number;
+  };
 
 export interface SystemConfig {
   // Component Properties
@@ -342,7 +344,15 @@ export class SolarThermalSystem {
           100
         : 0;
 
-    const state = {
+    const instantaneousPowerTransfer =
+      this.circulationPump.isRunning && this.circulationPump.getFlowRate() > 0
+        ? this.circulationPump.getFlowRate() *
+          this.config.workingFluid.density *
+          this.config.workingFluid.specificHeatCapacity *
+          this.circulationPump.getTemperatureDifference()
+        : 0;
+
+    const state: SystemState = {
       // Time
       simulationTime: this.simulationTime,
       timeOfDayMinutes: this.config.timeOfDayMinutes,
@@ -382,6 +392,7 @@ export class SolarThermalSystem {
       // System efficiency
       systemEfficiency,
       totalHeatLoss,
+      instantaneousPowerTransfer,
     };
 
     // Validate no NaN values in state
