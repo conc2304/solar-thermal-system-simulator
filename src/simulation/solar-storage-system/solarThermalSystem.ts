@@ -32,6 +32,7 @@ interface EnvironmentState {
   solarIntensity: number;
   ambientTemperature: TemperatureCelsius;
   solarRadiation: number;
+  workingFluid: FluidProperties;
 }
 
 interface SolarPanelState {
@@ -114,15 +115,19 @@ export class SolarThermalSystem {
   private isRunning: boolean = true;
 
   private config: SimulationConfig;
+  private readonly initialConfig: SystemConfig; // Store initial settings for reset
 
-  private flowSequence: BaseSystemEntity[];
+  private flowSequence: BaseSystemEntity[]; // Order to process components
 
+  private readonly initialTime = 12; // Hour
   constructor(systemConfig: SystemConfig) {
+    // Store initial configuration for reset functionality
+    this.initialConfig = { ...systemConfig };
     this.config = {
       ambientTemperature: systemConfig.ambientTemperature ?? 20,
       daylight: true,
-      timeOfDayMinutes: 12 * 60, // start at noon
       workingFluid: systemConfig.workingFluid ?? FLUIDS.water,
+      timeOfDayMinutes: this.initialTime * 60,
     };
 
     // Instantiate System Components //
@@ -242,7 +247,51 @@ export class SolarThermalSystem {
     this.isRunning = false;
     this.isPaused = false;
     this.simulationTime = 0;
-    //  TODO - Could reset all components to initial state here
+    this.setTimeOfDay(12);
+
+    // TODO Should stop reset the simulation variables
+  }
+
+  public reset(): void {
+    // Reset simulation state
+    this.simulationTime = 0;
+    this.isPaused = false;
+    this.isRunning = true;
+
+    // Reset config to initial values
+    this.config = {
+      ambientTemperature: this.initialConfig.ambientTemperature ?? 20,
+      daylight: true,
+      workingFluid: this.initialConfig.workingFluid ?? FLUIDS.water,
+      timeOfDayMinutes: this.initialTime * 60,
+    };
+
+    // Reset storage tank temperatures
+    const initialTankTemp = this.initialConfig.initialTankTemp ?? 20;
+    this.storageTank.temperature = initialTankTemp;
+    this.storageTank['topTemperature'] = initialTankTemp;
+    this.storageTank['bottomTemperature'] = initialTankTemp;
+    this.storageTank.storedEnergy = 0;
+    this.storageTank.heatLossRate = 0;
+
+    // Reset solar panel
+    this.solarPanel.temperature = 25;
+    this.solarPanel.energyCaptured = 0;
+    this.solarPanel.energyTransferred = 0;
+
+    // Reset pump to auto mode
+    this.circulationPump.setMode('auto');
+    this.circulationPump.stop();
+
+    // Reset pipes
+    const ambientTemp = this.config.ambientTemperature;
+    this.inletPipe.temperature = ambientTemp;
+    this.outletPipe.temperature = ambientTemp;
+
+    // Reset all flow conditions
+    this.flowSequence.forEach((component) => {
+      component.setInletConditions(ambientTemp, 0);
+    });
   }
 
   public step(deltaTime: Time): void {
@@ -311,6 +360,7 @@ export class SolarThermalSystem {
       solarIntensity: this.heatSource.getIntensity(),
       solarRadiation: this.heatSource.getSolarRadiation(),
       ambientTemperature: this.config.ambientTemperature,
+      workingFluid: this.config.workingFluid,
 
       // Solar Panel
       panelTemperature: this.solarPanel.temperature,

@@ -45,7 +45,7 @@ export class CirculationPump extends BaseSystemEntity {
     if (this.isRunning && this.flowRate > 0) {
       this.temperature = this.inletTemperature;
     } else {
-      // Heat loss in when off
+      // Heat loss when off
       const coolingRate = 0.01;
       this.temperature +=
         (config.ambientTemperature - this.temperature) *

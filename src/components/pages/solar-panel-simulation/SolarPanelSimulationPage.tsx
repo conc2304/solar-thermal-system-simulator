@@ -1,9 +1,10 @@
 import { Typography } from '@/components/atoms';
-import { SolarThermalVisualization } from '@/simulation/visualization-components';
+import { SolarThermalDashboard } from '@/simulation/visualization-components';
 
 export const SolarPanelSimulationPage = () => {
   return (
     <div
+      className="SolarPanelSimulationPage--root"
       sx={{
         bg: 'background',
         padding: [3, 4, 5],
@@ -11,6 +12,7 @@ export const SolarPanelSimulationPage = () => {
         flexDirection: 'column',
         height: '100vh',
         width: '100vw',
+        overflow: 'hidden',
       }}
     >
       <Typography variant="h1" sx={{ color: 'text', textAlign: 'center' }}>
@@ -20,11 +22,12 @@ export const SolarPanelSimulationPage = () => {
       <div
         className="SimulationContainer--root"
         sx={{
-          flexShrink: 0,
           flexGrow: 1,
+          minHeight: 0,
+          overflow: 'hidden',
         }}
       >
-        <SolarThermalVisualization />
+        <SolarThermalDashboard />
       </div>
     </div>
   );

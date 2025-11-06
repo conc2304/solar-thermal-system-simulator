@@ -1,1 +1,1 @@
-export * from './SolarThermalVisualization';
+export * from './SolarThermalDashboard';
