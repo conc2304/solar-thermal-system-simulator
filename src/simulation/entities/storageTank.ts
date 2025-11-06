@@ -137,7 +137,7 @@ export class StorageTank extends BaseSystemEntity {
     }
 
     // Simple ambient heat loss - reduced for better insulation
-    const coolingRate = 0.0001; // Much slower cooling for well-insulated tank
+    const coolingRate = 0.0000001; // Much slower cooling for well-insulated tank
     const coolingFactor = Math.min(1, coolingRate * deltaTime); // Cap at 100% to prevent overshoot
 
     this.temperature =

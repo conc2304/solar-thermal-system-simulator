@@ -51,7 +51,7 @@ export class SolarPanel extends BaseSystemEntity {
     const { density, specificHeatCapacity } = config.workingFluid;
 
     // Ensure temperature is valid before calculations
-    const absoluteMin = -273;
+    const absoluteMin = -10;
     if (
       this.temperature === null ||
       isNaN(this.temperature) ||
@@ -87,10 +87,11 @@ export class SolarPanel extends BaseSystemEntity {
       this.outletTemperature = this.temperature;
 
       // Heating from solar radiation
-      const heatingRate = this.energyCaptured / (this.thermalMass * specificHeatCapacity);
+      const heatingRate =
+        this.energyCaptured / (this.thermalMass * specificHeatCapacity);
 
       // Ambient cooling - much slower to match other components
-      const coolingRate = 0.0005; // Slower cooling for thermal mass
+      const coolingRate = 0.00005; // Slower cooling for thermal mass
       const coolingFactor = Math.min(1, coolingRate * deltaTime); // Cap to prevent overshoot
 
       this.temperature =
@@ -105,7 +106,10 @@ export class SolarPanel extends BaseSystemEntity {
     // Ensure temperatures stay within reasonable bounds
     this.temperature = Math.max(this.temperature, absoluteMin);
     this.outletTemperature = Math.max(this.outletTemperature, absoluteMin);
-    this.outletTemperature = Math.min(this.outletTemperature, this.maxStagnationTemp);
+    this.outletTemperature = Math.min(
+      this.outletTemperature,
+      this.maxStagnationTemp
+    );
 
     // Check for NaN in any temperature property
     if (isNaN(this.temperature)) {

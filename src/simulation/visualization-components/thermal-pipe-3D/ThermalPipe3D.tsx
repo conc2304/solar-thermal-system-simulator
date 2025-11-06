@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Billboard, Text } from '@react-three/drei';
 import type { ThreeEvent } from '@react-three/fiber';
@@ -24,6 +24,14 @@ export const ThermalPipe3D = ({
   isPaused,
 }: ThermalPipe3DProps) => {
   const [showLabels, setShowLabels] = useState(false);
+  const pipeTempRange = useRef<[min: number, max: number]>([
+    pipeTemp,
+    pipeTemp,
+  ]);
+  pipeTempRange.current = [
+    Math.min(pipeTemp, pipeTempRange.current[0]),
+    Math.max(pipeTemp, pipeTempRange.current[1]),
+  ];
 
   const pipeSegments = 32;
   const radialSegments = 8;
@@ -39,7 +47,17 @@ export const ThermalPipe3D = ({
     return curve;
   }, [pathPoints]);
 
-  const pipeColor = useMemo(() => getColorForTemp(pipeTemp), [pipeTemp]);
+  // If the current temp is the same as min and max then use fallback range for coloring
+  const tempArgs =
+    pipeTemp === pipeTempRange.current[0] &&
+    pipeTemp === pipeTempRange.current[1]
+      ? pipeTempRange.current
+      : undefined;
+
+  const pipeColor = useMemo(
+    () => getColorForTemp(pipeTemp, ...(tempArgs ?? [])),
+    [pipeTemp]
+  );
 
   // Handle pointer over
   const handlePointerOver = (event: ThreeEvent<PointerEvent>) => {
@@ -67,10 +85,10 @@ export const ThermalPipe3D = ({
         <meshStandardMaterial
           color={pipeColor}
           transparent={true}
-          opacity={0.5}
+          opacity={0.35}
           metalness={0.8}
-          roughness={0.2}
-          side={THREE.DoubleSide} // Renders both inside and outside
+          roughness={1}
+          side={THREE.DoubleSide} // Renders both inside and outside otherwise inside is not transparent
         />
         <tubeGeometry
           args={[pipePath, pipeSegments, pipeRadius, radialSegments, closed]}

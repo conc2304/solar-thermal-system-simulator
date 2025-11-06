@@ -28,8 +28,8 @@ export const DEFAULT_SYSTEM_STATE_METRICS: MetricConfig<SystemState>[] = [
   },
   {
     label: 'Solar Intensity',
-    getValue: (state) => `${state.solarIntensity.toFixed(0)} W/m²`,
-    getRawValue: (state) => state.solarIntensity,
+    getValue: (state) => `${(state.solarIntensity * 1000).toFixed(0)} W/m²`,
+    getRawValue: (state) => state.solarIntensity * 1000,
   },
   {
     label: 'Panel Temperature',

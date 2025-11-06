@@ -30,10 +30,40 @@ StorageTank3DProps) => {
   const [showLabels, setShowLabels] = useState(false);
   const topTankRef = useRef<THREE.Mesh>(null);
   const bottomTankRef = useRef<THREE.Mesh>(null);
+  const topTempRange = useRef<[min: number, max: number]>([topTemp, topTemp]);
+  const bottomTempRange = useRef<[min: number, max: number]>([
+    bottomTemp,
+    bottomTemp,
+  ]);
+
+  topTempRange.current = [
+    Math.min(topTemp, topTempRange.current[0]),
+    Math.max(topTemp, topTempRange.current[1]),
+  ];
+  bottomTempRange.current = [
+    Math.min(bottomTemp, bottomTempRange.current[0]),
+    Math.max(bottomTemp, bottomTempRange.current[1]),
+  ];
 
   // Get solid colors for each tank
-  const topColor = useMemo(() => getColorForTemp(topTemp), [topTemp]);
-  const bottomColor = useMemo(() => getColorForTemp(bottomTemp), [bottomTemp]);
+  const topColor = useMemo(
+    () =>
+      getColorForTemp(
+        topTemp,
+        bottomTempRange.current[0],
+        topTempRange.current[1]
+      ),
+    [topTemp]
+  );
+  const bottomColor = useMemo(
+    () =>
+      getColorForTemp(
+        bottomTemp,
+        bottomTempRange.current[0],
+        topTempRange.current[1]
+      ),
+    [bottomTemp]
+  );
 
   // Each cylinder is half the total height
   const cylinderHeight = height / 2;

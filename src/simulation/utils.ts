@@ -64,9 +64,18 @@ export const formatMilliseconds = (milliseconds: number): string => {
   return `${hours.toFixed(2)} hr`;
 };
 
-export const getColorForTemp = (temp: number): string => {
-  const normalized = Math.min(Math.max((temp - 20) / 60, 0), 1);
-  const hue = 0.6 - normalized * 0.6; // Blue to red
-  const color = new THREE.Color().setHSL(hue, 0.8, 0.5);
-  return `rgb(${color.r * 255}, ${color.g * 255}, ${color.b * 255})`;
+export const getColorForTemp = (
+  temp: number,
+  minTemp: number = 20,
+  maxTemp: number = 80
+): THREE.Color => {
+  const range = maxTemp - minTemp;
+  const normalized = Math.min(Math.max((temp - minTemp) / range, 0), 1);
+
+  // Interpolate directly between blue and red
+  const coldColor = new THREE.Color(0x0000ff); // Blue
+  const hotColor = new THREE.Color(0xff0000); // Red
+
+  const color = coldColor.lerp(hotColor, normalized);
+  return color;
 };

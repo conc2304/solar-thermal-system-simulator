@@ -71,6 +71,7 @@ export const SimulationRuntimeState = ({
           }}
         >
           <Typography>
+            <strong>Status: </strong>
             <span
               sx={{
                 display: 'inline-block',
@@ -78,10 +79,11 @@ export const SimulationRuntimeState = ({
                 borderRadius: 'pill',
                 height: '12px',
                 width: '12px',
-                mr: 2,
+                ml: 2,
+                verticalAlign: 'middle',
               }}
             />
-            <strong>Status: </strong>
+            <br />
             <strong sx={{ color: statusColorMap[status] }}>{status}</strong>
           </Typography>
         </div>
@@ -94,7 +96,7 @@ export const SimulationRuntimeState = ({
         >
           <Typography sx={{ textAlign: 'center' }}>
             <strong>Run Time: </strong>
-            <br></br>
+            <br />
             <span sx={{ fontFamily: 'monospace' }}>
               {formatMilliseconds(runTime)}
             </span>
@@ -109,7 +111,7 @@ export const SimulationRuntimeState = ({
         >
           <Typography sx={{ textAlign: 'center' }}>
             <strong>Simulation Time: </strong>
-            <br></br>
+            <br />
             <span sx={{ fontFamily: 'monospace' }}>{clockTime}</span>
           </Typography>
         </div>

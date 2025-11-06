@@ -16,7 +16,7 @@ export const FluidFlow = ({
   flowRate,
   temperature,
   path,
-  speedScale = 50,
+  speedScale = 25,
   isPaused,
 }: FluidFlowProps) => {
   const particlesRef = useRef<THREE.Mesh[]>([]);
