@@ -47,18 +47,26 @@ export class CirculationPump extends BaseSystemEntity {
       this.outletTemperature = this.inletTemperature;
     } else {
       // Pump off: no flow, gradually cool to ambient
-      const coolingRate = 0.05;
+      const coolingRate = 0.00005;
       this.temperature =
         this.temperature +
-        (config.ambientTemperature - this.temperature) * coolingRate * deltaTime;
+        (config.ambientTemperature - this.temperature) *
+          coolingRate *
+          deltaTime;
       this.outletTemperature = this.temperature;
     }
 
     // Ensure temperatures stay within reasonable bounds
     const maxTemp = 120; // Max reasonable temperature for a pump
-    const absoluteMin = -273;
-    this.temperature = Math.max(Math.min(this.temperature, maxTemp), absoluteMin);
-    this.outletTemperature = Math.max(Math.min(this.outletTemperature, maxTemp), absoluteMin);
+    const absoluteMin = config.ambientTemperature;
+    this.temperature = Math.max(
+      Math.min(this.temperature, maxTemp),
+      absoluteMin
+    );
+    this.outletTemperature = Math.max(
+      Math.min(this.outletTemperature, maxTemp),
+      absoluteMin
+    );
 
     // Check for NaN in any temperature property
     if (isNaN(this.temperature)) {

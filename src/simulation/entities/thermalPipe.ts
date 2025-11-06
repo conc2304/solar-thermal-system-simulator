@@ -39,20 +39,34 @@ export class ThermalPipe extends BaseSystemEntity {
     } else {
       // No flow - pipe gradually cools to ambient
       this.heatLoss = 0;
-      const coolingRate = 0.05;
+      const coolingRate = 0.00005;
 
       this.temperature =
         this.temperature +
-        (config.ambientTemperature - this.temperature) * coolingRate * deltaTime;
+        (config.ambientTemperature - this.temperature) *
+          coolingRate *
+          deltaTime;
 
+      const maxTemp = 120; // Max reasonable temperature
+      const absoluteMin = config.ambientTemperature;
+      this.temperature = Math.max(
+        Math.min(this.temperature, maxTemp),
+        absoluteMin
+      );
       this.outletTemperature = this.temperature;
     }
 
     // Ensure temperatures stay within reasonable bounds
     const maxTemp = 200; // Max reasonable temperature for a pipe
-    const absoluteMin = -273;
-    this.temperature = Math.max(Math.min(this.temperature, maxTemp), absoluteMin);
-    this.outletTemperature = Math.max(Math.min(this.outletTemperature, maxTemp), absoluteMin);
+    const absoluteMin = config.ambientTemperature;
+    this.temperature = Math.max(
+      Math.min(this.temperature, maxTemp),
+      absoluteMin
+    );
+    this.outletTemperature = Math.max(
+      Math.min(this.outletTemperature, maxTemp),
+      absoluteMin
+    );
 
     // Check for NaN in any temperature property
     if (isNaN(this.temperature)) {

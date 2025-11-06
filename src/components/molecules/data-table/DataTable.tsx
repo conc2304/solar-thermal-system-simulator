@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChartAreaIcon, EyeOffIcon } from 'lucide-react';
+import { useThemeUI } from 'theme-ui';
 
 import { IconButton, Typography } from '@/components/atoms';
 import { LineChartTrend, type DataPoint } from '@/components/molecules';
@@ -21,6 +22,8 @@ const MetricRow = ({
   chartData = [],
   maxStreamSize = 50,
 }: MetricRowProps) => {
+  const { theme } = useThemeUI();
+  theme.rawColors?.primary;
   return (
     <tr>
       <td>
@@ -65,6 +68,7 @@ const MetricRow = ({
                 width={150}
                 height={30}
                 margin={{ top: 2, right: 2, bottom: 2, left: 2 }}
+                color={theme.rawColors?.text?.toString() ?? undefined}
               />
             )}
           </div>
