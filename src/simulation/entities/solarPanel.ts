@@ -91,7 +91,7 @@ export class SolarPanel extends BaseSystemEntity {
         this.energyCaptured / (this.thermalMass * specificHeatCapacity);
 
       // Ambient cooling - much slower to match other components
-      const coolingRate = 0.00005; // Slower cooling for thermal mass
+      const coolingRate = 0.0000005; // Slower cooling for thermal mass
       const coolingFactor = Math.min(1, coolingRate * deltaTime); // Cap to prevent overshoot
 
       this.temperature =
