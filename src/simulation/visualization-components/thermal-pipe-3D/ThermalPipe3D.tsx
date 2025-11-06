@@ -13,6 +13,7 @@ interface ThermalPipe3DProps {
   flowRate: number;
   pathPoints: THREE.Vector3Tuple[];
   pipeRadius?: number;
+  isPaused: boolean;
 }
 
 export const ThermalPipe3D = ({
@@ -20,6 +21,7 @@ export const ThermalPipe3D = ({
   flowRate,
   pathPoints,
   pipeRadius = 0.3,
+  isPaused,
 }: ThermalPipe3DProps) => {
   const [showLabels, setShowLabels] = useState(false);
 
@@ -97,6 +99,7 @@ export const ThermalPipe3D = ({
             path={pipePath}
             flowRate={flowRate}
             temperature={pipeTemp}
+            isPaused={isPaused}
           />
         </>
       )}

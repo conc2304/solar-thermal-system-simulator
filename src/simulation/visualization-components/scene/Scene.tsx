@@ -38,7 +38,7 @@ export const Scene = ({
 
   // Mesh Positions
   const solarPanelPosition: THREE.Vector3Tuple = [0, 0, -8];
-  const tankPosition: THREE.Vector3Tuple = [0, 3, 8];
+  const tankPosition: THREE.Vector3Tuple = [0, 0, 8];
   const tankHeight = 6;
   const tankRadius = 3;
   const pipeRadius = 0.3;
@@ -107,6 +107,7 @@ export const Scene = ({
         pipeRadius={0.3}
         pathPoints={outletPath}
         flowRate={systemState.flowRate}
+        isPaused={systemState.isPaused}
       />
       {/* Inlet - Cold water from tank bottom to panel */}
       <ThermalPipe3D
@@ -114,6 +115,7 @@ export const Scene = ({
         pipeRadius={pipeRadius}
         pathPoints={inletPath}
         flowRate={systemState.flowRate}
+        isPaused={systemState.isPaused}
       />
 
       {/* Circulation Pump */}

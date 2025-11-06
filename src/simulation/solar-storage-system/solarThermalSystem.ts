@@ -80,12 +80,8 @@ export type SystemState = TimeState &
 export interface SystemConfig {
   // Component Properties
   panelArea?: number; // m²
-  tankVolume?: number;
-  pipeLength: number;
-
+  tankVolume?: number; // m³
   panelEfficiency?: number; // % 0-1
-  tankInsulation?: number; // U-value W/(m²·K)
-  pipeInsulation?: number; // U-value W/(m²·K)
 
   // Pump Settings
   maxFlowRate?: number; // m³/s
@@ -146,7 +142,7 @@ export class SolarThermalSystem {
 
     this.storageTank = new StorageTank({
       volume: systemConfig.tankVolume ?? 0.2, // 200L
-      uValue: systemConfig.tankInsulation ?? 0.3,
+      uValue: 0.3, // Default insulation value
       maxTemperature: 90,
       initialTemp: systemConfig.initialTankTemp ?? 20,
     });
@@ -159,17 +155,13 @@ export class SolarThermalSystem {
     });
 
     this.inletPipe = new ThermalPipe({
-      length: systemConfig.pipeLength ?? 3,
-      diameter: 0.025,
-      uValue: systemConfig.pipeInsulation ?? 0.5,
       pipeType: 'inlet',
+      heatLossRate: 0.02, // 2% heat loss
     });
 
     this.outletPipe = new ThermalPipe({
-      length: systemConfig.pipeLength ?? 3,
-      diameter: 0.025,
-      uValue: systemConfig.pipeInsulation ?? 0.5,
       pipeType: 'outlet',
+      heatLossRate: 0.02, // 2% heat loss
     });
 
     this.flowSequence = [
@@ -350,7 +342,7 @@ export class SolarThermalSystem {
           100
         : 0;
 
-    return {
+    const state = {
       // Time
       simulationTime: this.simulationTime,
       timeOfDayMinutes: this.config.timeOfDayMinutes,
@@ -391,5 +383,64 @@ export class SolarThermalSystem {
       systemEfficiency,
       totalHeatLoss,
     };
+
+    // Validate no NaN values in state
+    this.validateSystemState(state);
+
+    return state;
+  }
+
+  private validateSystemState(state: SystemState): void {
+    const nanFields: string[] = [];
+
+    // Check all numeric fields for NaN
+    Object.entries(state).forEach(([key, value]) => {
+      if (typeof value === 'number' && isNaN(value)) {
+        nanFields.push(key);
+      }
+    });
+
+    if (nanFields.length > 0) {
+      // Gather detailed component state for debugging
+      const debugInfo = {
+        nanFields,
+        componentStates: {
+          solarPanel: {
+            temperature: this.solarPanel.temperature,
+            inletTemp: this.solarPanel['inletTemperature'],
+            outletTemp: this.solarPanel.getOutletTemperature(),
+          },
+          storageTank: {
+            temperature: this.storageTank.temperature,
+            topTemp: this.storageTank.getTopTemperature(),
+            bottomTemp: this.storageTank.getBottomTemperature(),
+          },
+          circulationPump: {
+            temperature: this.circulationPump.temperature,
+            inletTemp: this.circulationPump['inletTemperature'],
+            outletTemp: this.circulationPump.getOutletTemperature(),
+            isRunning: this.circulationPump.isRunning,
+            flowRate: this.circulationPump.getFlowRate(),
+          },
+          inletPipe: {
+            temperature: this.inletPipe.temperature,
+            inletTemp: this.inletPipe['inletTemperature'],
+            outletTemp: this.inletPipe.getOutletTemperature(),
+          },
+          outletPipe: {
+            temperature: this.outletPipe.temperature,
+            inletTemp: this.outletPipe['inletTemperature'],
+            outletTemp: this.outletPipe.getOutletTemperature(),
+          },
+        },
+      };
+
+      this.stop();
+      throw new Error(
+        `NaN detected in system state!\n` +
+          `Fields with NaN: ${nanFields.join(', ')}\n` +
+          `Component Debug Info:\n${JSON.stringify(debugInfo, null, 2)}`
+      );
+    }
   }
 }

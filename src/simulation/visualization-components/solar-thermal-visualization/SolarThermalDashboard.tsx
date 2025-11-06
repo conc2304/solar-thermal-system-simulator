@@ -24,7 +24,6 @@ export const SolarThermalDashboard = () => {
     new SolarThermalSystem({
       panelArea: 2,
       tankVolume: 0.2,
-      pipeLength: 3,
       pumpStartThresholdTemp: 8,
       pumpStopThresholdTemp: 3,
       initialTankTemp: 20,
@@ -127,7 +126,7 @@ export const SolarThermalDashboard = () => {
             >
               <SimulationRuntimeState
                 status={systemRef.current.getRunState()}
-                runTime={systemState.simulationTime.toFixed(3)}
+                runTime={systemState.simulationTime}
                 clockTime={minutesToHHMMSS(systemState.timeOfDayMinutes)}
                 sx={{
                   position: 'absolute',

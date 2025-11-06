@@ -1,12 +1,13 @@
 import { Typography } from '@/components/atoms';
 import type { SimulationStatus } from '@/simulation/types';
+import { formatMilliseconds } from '@/simulation/utils';
 import type { ThemeColor } from '@/theme';
 
 import type { ThemeUICSSObject } from 'theme-ui';
 
 interface SimulationRuntimeStateProps {
   status: SimulationStatus;
-  runTime: number | string;
+  runTime: number;
   clockTime: string;
   sx?: ThemeUICSSObject;
   timeScale: number;
@@ -60,33 +61,72 @@ export const SimulationRuntimeState = ({
           alignItems: 'center',
           position: 'relative',
           zIndex: 1,
+          gap: 2,
         }}
       >
-        <Typography>
-          <span
-            sx={{
-              display: 'inline-block',
-              bg: statusColorMap[status],
-              borderRadius: 'pill',
-              height: '12px',
-              width: '12px',
-              mr: 2,
-            }}
-          />
-          <strong>Status: </strong>
-          <strong sx={{ color: statusColorMap[status] }}>{status}</strong>
-        </Typography>
-        <Typography>
-          <strong>Run Time MS: </strong>
-          {runTime}
-        </Typography>
-        <Typography>
-          <strong>Simulation Time : </strong>
-          {clockTime}
-        </Typography>
+        <div
+          sx={{
+            minWidth: '150px',
+            maxWidth: '150px',
+          }}
+        >
+          <Typography>
+            <span
+              sx={{
+                display: 'inline-block',
+                bg: statusColorMap[status],
+                borderRadius: 'pill',
+                height: '12px',
+                width: '12px',
+                mr: 2,
+              }}
+            />
+            <strong>Status: </strong>
+            <strong sx={{ color: statusColorMap[status] }}>{status}</strong>
+          </Typography>
+        </div>
 
-        <div style={{ marginBottom: '10px' }}>
-          <label>Speed: {Math.floor(timeScale)}x</label>
+        <div
+          sx={{
+            minWidth: '140px',
+            maxWidth: '140px',
+          }}
+        >
+          <Typography sx={{ textAlign: 'center' }}>
+            <strong>Run Time: </strong>
+            <br></br>
+            <span sx={{ fontFamily: 'monospace' }}>
+              {formatMilliseconds(runTime)}
+            </span>
+          </Typography>
+        </div>
+
+        <div
+          sx={{
+            minWidth: '180px',
+            maxWidth: '180px',
+          }}
+        >
+          <Typography sx={{ textAlign: 'center' }}>
+            <strong>Simulation Time: </strong>
+            <br></br>
+            <span sx={{ fontFamily: 'monospace' }}>{clockTime}</span>
+          </Typography>
+        </div>
+
+        <div
+          sx={{
+            minWidth: '150px',
+            maxWidth: '150px',
+            marginBottom: '10px',
+          }}
+        >
+          <label sx={{ textAlign: 'center' }}>
+            <strong>Speed: </strong>
+            <span sx={{ fontFamily: 'monospace' }}>
+              {Math.floor(timeScale)}x
+            </span>
+          </label>
           <input
             type="range"
             role="slider"

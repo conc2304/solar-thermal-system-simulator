@@ -28,37 +28,19 @@ export const StorageTank3D = ({
 }: // storedEnergy,
 StorageTank3DProps) => {
   const [showLabels, setShowLabels] = useState(false);
-  const tankRef = useRef<THREE.Mesh>(null);
+  const topTankRef = useRef<THREE.Mesh>(null);
+  const bottomTankRef = useRef<THREE.Mesh>(null);
 
-  // Simulate temperature stratification
-  const gradientTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1;
-    canvas.height = 256;
+  // Get solid colors for each tank
+  const topColor = useMemo(() => getColorForTemp(topTemp), [topTemp]);
+  const bottomColor = useMemo(() => getColorForTemp(bottomTemp), [bottomTemp]);
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const gradient = ctx?.createLinearGradient(0, 0, 0, 256);
-
-    const topColor = getColorForTemp(topTemp);
-    const bottomColor = getColorForTemp(bottomTemp);
-
-    gradient?.addColorStop(0, topColor);
-    gradient?.addColorStop(1, bottomColor);
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 1, 256);
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.needsUpdate = true;
-
-    return texture;
-  }, [topTemp, bottomTemp]);
+  // Each cylinder is half the total height
+  const cylinderHeight = height / 2;
 
   const fontSize = 1;
-  const topTextPos = new THREE.Vector3(0, height + fontSize * 1.2, 0);
-  const bottomTextPos = new THREE.Vector3(0, height, 0);
+  const topTextPos = new THREE.Vector3(0, height + 2 * fontSize, 0);
+  const bottomTextPos = new THREE.Vector3(0, height + fontSize, 0);
 
   // Handle pointer over
   const handlePointerOver = (event: ThreeEvent<PointerEvent>) => {
@@ -76,19 +58,37 @@ StorageTank3DProps) => {
 
   return (
     <group position={position} rotation={rotation}>
-      {/* Tank Body */}
+      {/* Bottom Tank */}
       <mesh
-        ref={tankRef}
+        ref={bottomTankRef}
+        position={[0, cylinderHeight / 2, 0]}
         onPointerOver={handlePointerOver}
         onPointerOut={handlePointerOut}
         castShadow
         receiveShadow
       >
-        <cylinderGeometry args={[radius, radius, height, 32]} />
+        <cylinderGeometry args={[radius, radius, cylinderHeight, 32]} />
         <meshStandardMaterial
-          map={gradientTexture}
-          metalness={0.6}
-          roughness={0.3}
+          color={bottomColor}
+          metalness={0.2}
+          roughness={0.8}
+        />
+      </mesh>
+
+      {/* Top Tank */}
+      <mesh
+        ref={topTankRef}
+        position={[0, cylinderHeight + cylinderHeight / 2, 0]}
+        onPointerOver={handlePointerOver}
+        onPointerOut={handlePointerOut}
+        castShadow
+        receiveShadow
+      >
+        <cylinderGeometry args={[radius, radius, cylinderHeight, 32]} />
+        <meshStandardMaterial
+          color={topColor}
+          metalness={0.2}
+          roughness={0.8}
         />
       </mesh>
 

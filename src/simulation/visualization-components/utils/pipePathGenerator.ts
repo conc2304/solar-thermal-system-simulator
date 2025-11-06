@@ -33,8 +33,8 @@ export const generatePipePaths = (config: PipePathConfig): PipePaths => {
 
   // Calculate connection points
   const panelConnectionY = panelY + pipeRadius;
-  const tankBottomY = tankY - tankHeight / 2 + pipeRadius;
-  const tankTopY = tankY + tankHeight / 2 - pipeRadius;
+  const tankBottomY = tankY + pipeRadius;
+  const tankTopY = tankY + tankHeight - pipeRadius;
 
   // Midpoint Z for routing
   const midZ = (panelZ + tankZ) / 2;

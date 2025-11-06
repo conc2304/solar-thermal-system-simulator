@@ -50,11 +50,25 @@ export class SolarPanel extends BaseSystemEntity {
 
     const { density, specificHeatCapacity } = config.workingFluid;
 
-    if (this.flowRate > 0) {
-      // Transferring Energy
+    // Ensure temperature is valid before calculations
+    const absoluteMin = -273;
+    if (
+      this.temperature === null ||
+      isNaN(this.temperature) ||
+      this.temperature === undefined
+    ) {
+      this.temperature = config.ambientTemperature;
+    }
+    this.temperature = Math.max(
+      Math.min(this.temperature, this.maxStagnationTemp),
+      absoluteMin
+    );
 
+    if (this.flowRate > 0) {
+      // Fluid flowing: heat transfer to fluid
       const massFlowRate = this.flowRate * density; // kg/s
 
+      // Simple calculation: energy heats the fluid
       const maxTempRise =
         this.energyCaptured / (massFlowRate * specificHeatCapacity);
 
@@ -65,31 +79,64 @@ export class SolarPanel extends BaseSystemEntity {
         specificHeatCapacity *
         (this.outletTemperature - this.inletTemperature);
 
-      // Simple Avg for internal temp
-      this.temperature = (this.inletTemperature * this.outletTemperature) / 2;
+      // Panel temperature is average of inlet and outlet
+      this.temperature = (this.inletTemperature + this.outletTemperature) / 2;
     } else {
-      // Stagnation Condition -> no flow
+      // No flow: panel heats up from solar radiation or cools to ambient
       this.energyTransferred = 0;
       this.outletTemperature = this.temperature;
 
-      // Heat panel from solar
-      const energyGain = this.energyCaptured * deltaTime; // J
-      const tempIncrease =
-        energyGain / (this.thermalMass * specificHeatCapacity);
+      // Heating from solar radiation
+      const heatingRate = this.energyCaptured / (this.thermalMass * specificHeatCapacity);
 
-      // Ambient Heat Loss
-      const heatLoss =
-        this.uValue *
-        this.surfaceArea *
-        (this.temperature - config.ambientTemperature) *
-        deltaTime;
-      const tempDecrease = heatLoss / (this.thermalMass * specificHeatCapacity);
+      // Ambient cooling - much slower to match other components
+      const coolingRate = 0.0005; // Slower cooling for thermal mass
+      const coolingFactor = Math.min(1, coolingRate * deltaTime); // Cap to prevent overshoot
 
-      // Apply heat and cap at max
-      this.temperature += tempIncrease - tempDecrease;
+      this.temperature =
+        this.temperature +
+        heatingRate * deltaTime +
+        (config.ambientTemperature - this.temperature) * coolingFactor;
+
+      // Cap at max stagnation temperature
       this.temperature = Math.min(this.temperature, this.maxStagnationTemp);
     }
 
-    // this.temperature += this.energyCaptured / (this.surfaceArea * 500);
+    // Ensure temperatures stay within reasonable bounds
+    this.temperature = Math.max(this.temperature, absoluteMin);
+    this.outletTemperature = Math.max(this.outletTemperature, absoluteMin);
+    this.outletTemperature = Math.min(this.outletTemperature, this.maxStagnationTemp);
+
+    // Check for NaN in any temperature property
+    if (isNaN(this.temperature)) {
+      throw new Error(
+        `[SolarPanel] NaN detected in temperature!\n` +
+          `Stack: ${new Error().stack}\n` +
+          `State: ${JSON.stringify({
+            temperature: this.temperature,
+            inletTemperature: this.inletTemperature,
+            outletTemperature: this.outletTemperature,
+            flowRate: this.flowRate,
+            energyCaptured: this.energyCaptured,
+            energyTransferred: this.energyTransferred,
+            ambientTemp: config.ambientTemperature,
+          })}`
+      );
+    }
+    if (isNaN(this.outletTemperature)) {
+      throw new Error(
+        `[SolarPanel] NaN detected in outletTemperature!\n` +
+          `Stack: ${new Error().stack}\n` +
+          `State: ${JSON.stringify({
+            temperature: this.temperature,
+            inletTemperature: this.inletTemperature,
+            outletTemperature: this.outletTemperature,
+            flowRate: this.flowRate,
+            energyCaptured: this.energyCaptured,
+            energyTransferred: this.energyTransferred,
+            ambientTemp: config.ambientTemperature,
+          })}`
+      );
+    }
   }
 }

@@ -48,79 +48,183 @@ export class StorageTank extends BaseSystemEntity {
     const { density, specificHeatCapacity } = config.workingFluid;
     const tankMass = this.volume * density;
 
+    // Ensure main temperature is never null or NaN first
+    if (
+      this.temperature === null ||
+      isNaN(this.temperature) ||
+      this.temperature === undefined
+    ) {
+      this.temperature = config.ambientTemperature;
+    }
+
+    // Ensure stratification temperatures are never null or NaN
+    if (
+      this.topTemperature === null ||
+      isNaN(this.topTemperature) ||
+      this.topTemperature === undefined
+    ) {
+      this.topTemperature = this.temperature;
+    }
+    if (
+      this.bottomTemperature === null ||
+      isNaN(this.bottomTemperature) ||
+      this.bottomTemperature === undefined
+    ) {
+      this.bottomTemperature = this.temperature;
+    }
+
+    // Clamp temperatures to reasonable bounds BEFORE calculations
+    const absoluteMin = -273;
+    this.temperature = Math.max(Math.min(this.temperature, this.maxTemperature), absoluteMin);
+    this.topTemperature = Math.max(Math.min(this.topTemperature, this.maxTemperature), absoluteMin);
+    this.bottomTemperature = Math.max(Math.min(this.bottomTemperature, this.maxTemperature), absoluteMin);
+
     if (this.flowRate > 0) {
-      // Transferring Energy
+      // Hot fluid entering tank
       const massFlowRate = this.flowRate * density; // kg/s
 
-      // Fluid Mixing - how new water affects tank temps
+      // Simple mixing: blend incoming fluid temperature with tank temperature
       const mixingRate = (massFlowRate * deltaTime) / tankMass;
-      const mixingFactor = Math.min(1, mixingRate);
+      const mixingFactor = Math.min(0.1, mixingRate); // Cap at 10% per update
 
-      // Simulate hot fluid entering and mixing and simplified stratification
-      const topMixingWeight = 0.5;
-      const bottomMixingWeight = 1 - topMixingWeight;
-      this.topTemperature =
-        this.topTemperature * (1 - mixingFactor * topMixingWeight) +
-        this.inletTemperature * mixingFactor * bottomMixingWeight;
+      // Update tank temperature with incoming hot fluid
+      this.temperature =
+        this.temperature * (1 - mixingFactor) +
+        this.inletTemperature * mixingFactor;
 
-      const stratificationFactor = 0.1 * deltaTime;
-      const avgTemp = (this.temperature - this.bottomTemperature) / 2;
-      this.bottomTemperature +=
-        (avgTemp - this.bottomTemperature) * stratificationFactor;
-    } else {
-      // Stagnation Condition -> no flow
-
-      this.outletTemperature = this.bottomTemperature;
-
-      // Simplified stratification
-      const mixingFactor = 0.01 * deltaTime;
-      const middleTemp = (this.topTemperature + this.bottomTemperature) / 2;
-      this.topTemperature += (middleTemp - this.topTemperature) * mixingFactor;
-      this.bottomTemperature +=
-        (middleTemp - this.bottomTemperature) * mixingFactor;
-
-      // Clamp Internal Temps
-      this.topTemperature = Math.min(this.topTemperature, this.maxTemperature);
-      this.bottomTemperature = Math.max(
-        this.bottomTemperature,
+      // Simple stratification: top is warmer, bottom is cooler
+      // Gradually adjust stratification to avoid jitter
+      const stratificationDelta = 10; // 10°C difference between top and bottom
+      const targetTopTemp = Math.min(
+        this.temperature + stratificationDelta,
+        this.maxTemperature
+      );
+      const targetBottomTemp = Math.max(
+        this.temperature - stratificationDelta,
         config.ambientTemperature
       );
 
-      // Simplified average tank temperature
-      this.temperature = (this.topTemperature + this.bottomTemperature) / 2;
+      // Smooth transition to target temperatures
+      const stratificationRate = Math.min(1, 0.05 * deltaTime); // Cap at 100%
+      this.topTemperature =
+        this.topTemperature + (targetTopTemp - this.topTemperature) * stratificationRate;
+      this.bottomTemperature =
+        this.bottomTemperature + (targetBottomTemp - this.bottomTemperature) * stratificationRate;
 
-      // Temp of fluid exiting from storage take to inlet/return pipe to panel
+      this.outletTemperature = this.bottomTemperature;
+    } else {
+      // No flow: temperatures gradually equalize
+      const mixingFactor = Math.min(0.05, 0.005 * deltaTime); // Slower mixing when no flow
+      this.topTemperature =
+        this.topTemperature + (this.temperature - this.topTemperature) * mixingFactor;
+      this.bottomTemperature =
+        this.bottomTemperature +
+        (this.temperature - this.bottomTemperature) * mixingFactor;
+
       this.outletTemperature = this.bottomTemperature;
     }
 
-    // Apply ambient heat loss;
-    const heatLoss = this.calculateHeatLoss(deltaTime, {
-      temperature: this.temperature,
-      surfaceArea: this.surfaceArea,
-      uValue: this.uValue,
-      ambientTemp: config.ambientTemperature,
-    });
-    const tempDecrease = heatLoss / (tankMass * specificHeatCapacity);
+    // Simple ambient heat loss - reduced for better insulation
+    const coolingRate = 0.0001; // Much slower cooling for well-insulated tank
+    const coolingFactor = Math.min(1, coolingRate * deltaTime); // Cap at 100% to prevent overshoot
 
-    // Simplified Tank Heat Loss (cap at ambient temp)
-    this.topTemperature = Math.max(
-      this.topTemperature - tempDecrease,
-      config.ambientTemperature
-    );
-    this.bottomTemperature = Math.max(
-      this.bottomTemperature - tempDecrease,
-      config.ambientTemperature
-    );
-    this.temperature = Math.max(
-      this.temperature - tempDecrease,
-      config.ambientTemperature
-    );
+    this.temperature =
+      this.temperature +
+      (config.ambientTemperature - this.temperature) * coolingFactor;
 
-    // Set energy stored relative to ambient temp
+    this.topTemperature =
+      this.topTemperature +
+      (config.ambientTemperature - this.topTemperature) * coolingFactor;
+
+    this.bottomTemperature =
+      this.bottomTemperature +
+      (config.ambientTemperature - this.bottomTemperature) * coolingFactor;
+
+    // Cap all temperatures at reasonable maximums to prevent overflow
+    this.temperature = Math.min(this.temperature, this.maxTemperature);
+    this.topTemperature = Math.min(this.topTemperature, this.maxTemperature);
+    this.bottomTemperature = Math.min(this.bottomTemperature, this.maxTemperature);
+
+    // Ensure temperatures never go below absolute minimum (reuse absoluteMin from line 77)
+    this.temperature = Math.max(this.temperature, absoluteMin);
+    this.topTemperature = Math.max(this.topTemperature, absoluteMin);
+    this.bottomTemperature = Math.max(this.bottomTemperature, absoluteMin);
+    this.outletTemperature = Math.max(this.outletTemperature, absoluteMin);
+
+    // Calculate heat loss rate for display
+    this.heatLossRate =
+      tankMass *
+      specificHeatCapacity *
+      (this.temperature - config.ambientTemperature) *
+      coolingRate;
+
+    // Calculate stored energy
     this.storedEnergy =
       tankMass *
       specificHeatCapacity *
       (this.temperature - config.ambientTemperature);
+
+    // Check for NaN in any temperature property
+    if (isNaN(this.temperature)) {
+      throw new Error(
+        `[StorageTank] NaN detected in temperature!\n` +
+          `Stack: ${new Error().stack}\n` +
+          `State: ${JSON.stringify({
+            temperature: this.temperature,
+            topTemperature: this.topTemperature,
+            bottomTemperature: this.bottomTemperature,
+            inletTemperature: this.inletTemperature,
+            outletTemperature: this.outletTemperature,
+            flowRate: this.flowRate,
+            ambientTemp: config.ambientTemperature,
+          })}`
+      );
+    }
+    if (isNaN(this.topTemperature)) {
+      throw new Error(
+        `[StorageTank] NaN detected in topTemperature!\n` +
+          `Stack: ${new Error().stack}\n` +
+          `State: ${JSON.stringify({
+            temperature: this.temperature,
+            topTemperature: this.topTemperature,
+            bottomTemperature: this.bottomTemperature,
+            inletTemperature: this.inletTemperature,
+            outletTemperature: this.outletTemperature,
+            flowRate: this.flowRate,
+            ambientTemp: config.ambientTemperature,
+          })}`
+      );
+    }
+    if (isNaN(this.bottomTemperature)) {
+      throw new Error(
+        `[StorageTank] NaN detected in bottomTemperature!\n` +
+          `Stack: ${new Error().stack}\n` +
+          `State: ${JSON.stringify({
+            temperature: this.temperature,
+            topTemperature: this.topTemperature,
+            bottomTemperature: this.bottomTemperature,
+            inletTemperature: this.inletTemperature,
+            outletTemperature: this.outletTemperature,
+            flowRate: this.flowRate,
+            ambientTemp: config.ambientTemperature,
+          })}`
+      );
+    }
+    if (isNaN(this.outletTemperature)) {
+      throw new Error(
+        `[StorageTank] NaN detected in outletTemperature!\n` +
+          `Stack: ${new Error().stack}\n` +
+          `State: ${JSON.stringify({
+            temperature: this.temperature,
+            topTemperature: this.topTemperature,
+            bottomTemperature: this.bottomTemperature,
+            inletTemperature: this.inletTemperature,
+            outletTemperature: this.outletTemperature,
+            flowRate: this.flowRate,
+            ambientTemp: config.ambientTemperature,
+          })}`
+      );
+    }
   }
 
   // Stats Getters //
@@ -144,37 +248,8 @@ export class StorageTank extends BaseSystemEntity {
     return this.storedEnergy / (3600 * 1000); // J to kWh
   }
 
-  private calculateHeatLoss(
-    deltaTime: Time,
-    config: {
-      temperature: TemperatureCelsius;
-      surfaceArea: number;
-      uValue: number;
-      ambientTemp: TemperatureCelsius;
-    }
-  ): Energy {
-    this.heatLossRate = this.calculateHeatLossRate(config);
-    const heatLoss = this.heatLossRate * deltaTime; // J
-    return heatLoss;
-  }
-
-  private calculateHeatLossRate({
-    temperature,
-    surfaceArea,
-    uValue,
-    ambientTemp,
-  }: {
-    temperature: TemperatureCelsius;
-    surfaceArea: number;
-    uValue: number;
-    ambientTemp: TemperatureCelsius;
-  }): number {
-    const heatLossRate = uValue * surfaceArea * (temperature - ambientTemp);
-    return heatLossRate;
-  }
-
   private calculateSurfaceArea(volume: number): number {
-    // Assuming a circular tank
+    // Simple approximation for cylindrical tank
     const radius = Math.pow(volume / (Math.PI * 2), 1 / 3);
     const height = 2 * radius;
     const surfaceArea = 2 * Math.PI * radius * (radius + height);

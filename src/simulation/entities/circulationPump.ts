@@ -41,20 +41,56 @@ export class CirculationPump extends BaseSystemEntity {
   }
 
   public update(deltaTime: Time, config: SimulationConfig): void {
-    // Set and internal and output temps
     if (this.isRunning && this.flowRate > 0) {
+      // Pump running: fluid flows through, minimal temperature change
       this.temperature = this.inletTemperature;
+      this.outletTemperature = this.inletTemperature;
     } else {
-      // Heat loss when off
-      const coolingRate = 0.01;
-      this.temperature +=
-        (config.ambientTemperature - this.temperature) *
-        coolingRate *
-        deltaTime;
+      // Pump off: no flow, gradually cool to ambient
+      const coolingRate = 0.05;
+      this.temperature =
+        this.temperature +
+        (config.ambientTemperature - this.temperature) * coolingRate * deltaTime;
+      this.outletTemperature = this.temperature;
     }
 
-    // Outlet and inlet are same temp
-    this.outletTemperature = this.inletTemperature;
+    // Ensure temperatures stay within reasonable bounds
+    const maxTemp = 120; // Max reasonable temperature for a pump
+    const absoluteMin = -273;
+    this.temperature = Math.max(Math.min(this.temperature, maxTemp), absoluteMin);
+    this.outletTemperature = Math.max(Math.min(this.outletTemperature, maxTemp), absoluteMin);
+
+    // Check for NaN in any temperature property
+    if (isNaN(this.temperature)) {
+      throw new Error(
+        `[CirculationPump] NaN detected in temperature!\n` +
+          `Stack: ${new Error().stack}\n` +
+          `State: ${JSON.stringify({
+            temperature: this.temperature,
+            inletTemperature: this.inletTemperature,
+            outletTemperature: this.outletTemperature,
+            flowRate: this.flowRate,
+            isRunning: this.isRunning,
+            mode: this.mode,
+            ambientTemp: config.ambientTemperature,
+          })}`
+      );
+    }
+    if (isNaN(this.outletTemperature)) {
+      throw new Error(
+        `[CirculationPump] NaN detected in outletTemperature!\n` +
+          `Stack: ${new Error().stack}\n` +
+          `State: ${JSON.stringify({
+            temperature: this.temperature,
+            inletTemperature: this.inletTemperature,
+            outletTemperature: this.outletTemperature,
+            flowRate: this.flowRate,
+            isRunning: this.isRunning,
+            mode: this.mode,
+            ambientTemp: config.ambientTemperature,
+          })}`
+      );
+    }
   }
 
   public updateControl(

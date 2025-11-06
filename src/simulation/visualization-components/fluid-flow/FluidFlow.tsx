@@ -9,6 +9,7 @@ interface FluidFlowProps {
   temperature: TemperatureCelsius;
   path: THREE.Curve<THREE.Vector3>;
   speedScale?: number;
+  isPaused: boolean;
 }
 
 export const FluidFlow = ({
@@ -16,6 +17,7 @@ export const FluidFlow = ({
   temperature,
   path,
   speedScale = 50,
+  isPaused,
 }: FluidFlowProps) => {
   const particlesRef = useRef<THREE.Mesh[]>([]);
   const groupRef = useRef<THREE.Group>(null);
@@ -32,7 +34,7 @@ export const FluidFlow = ({
   );
 
   useFrame((_state, delta) => {
-    if (flowRate === 0) return;
+    if (flowRate === 0 || isPaused) return;
 
     // Update particle position along path
     particlesRef.current.forEach((particle, i) => {

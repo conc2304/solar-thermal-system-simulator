@@ -28,7 +28,7 @@ type Story = StoryObj<typeof meta>;
 export const Running: Story = {
   args: {
     status: 'Running',
-    runTime: 1500,
+    runTime: 1500, // 1.5 seconds
     clockTime: '12:30:45',
     timeScale: 1,
     setTimeScale: (scale) => console.log('Set time scale:', scale),
@@ -40,7 +40,7 @@ export const Running: Story = {
 export const Paused: Story = {
   args: {
     status: 'Paused',
-    runTime: 3000,
+    runTime: 125000, // 2.08 minutes
     clockTime: '14:15:30',
     timeScale: 5,
     setTimeScale: (scale) => console.log('Set time scale:', scale),
@@ -58,5 +58,17 @@ export const Stopped: Story = {
     setTimeScale: (scale) => console.log('Set time scale:', scale),
     scaleMin: 1,
     scaleMax: 10,
+  },
+};
+
+export const LongRunning: Story = {
+  args: {
+    status: 'Running',
+    runTime: 68855181.8, // 19.13 hours (the example from the user)
+    clockTime: '18:45:22',
+    timeScale: 1000,
+    setTimeScale: (scale) => console.log('Set time scale:', scale),
+    scaleMin: 1,
+    scaleMax: 10000,
   },
 };

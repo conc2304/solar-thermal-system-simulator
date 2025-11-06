@@ -8,6 +8,8 @@ export default {
           jsx: 'react-jsx',
           jsxImportSource: 'theme-ui',
           esModuleInterop: true,
+          target: 'ES2022',
+          lib: ['ES2022', 'DOM', 'DOM.Iterable'],
           baseUrl: './src',
           paths: {
             '@/*': ['./*'],

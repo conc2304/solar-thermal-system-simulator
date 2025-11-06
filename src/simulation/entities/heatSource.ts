@@ -40,7 +40,7 @@ export class HeatSource extends BaseSystemEntity {
       const noiseValue = this.dailyIntensityNoise[Math.floor(minuteOfDay)];
 
       // Adjust the noise to create a more natural solar intensity curve
-      const noiseWeight = 0.3;
+      const noiseWeight = 0.0;
       const adjustedIntensity = this.applyDaytimeCurve(
         noiseValue,
         minuteOfDay,
