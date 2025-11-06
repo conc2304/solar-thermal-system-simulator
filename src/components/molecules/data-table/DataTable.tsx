@@ -28,13 +28,13 @@ const MetricRow = ({ label, value, valueColor }: MetricRowProps) => {
   );
 };
 
-export interface MetricConfig<T = unknown> {
+export interface MetricConfig<T = object> {
   label: string;
   getValue: (data: T) => string;
   getColor?: (data: T) => 'success' | 'error' | undefined;
 }
 
-export interface SystemMetricsProps<T = unknown> {
+export interface SystemMetricsProps<T = object> {
   title?: string;
   data: T;
   metrics: MetricConfig<T>[];

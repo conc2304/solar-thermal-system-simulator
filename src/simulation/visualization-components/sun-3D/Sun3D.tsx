@@ -11,7 +11,7 @@ interface Sun3DProps {
 }
 export const Sun3D = ({
   solarIntensity,
-  solarRadiation,
+  // solarRadiation,
   timeOfDayMinutes,
   orbitRadius = 10,
   tiltAngleDegrees = 23.5,

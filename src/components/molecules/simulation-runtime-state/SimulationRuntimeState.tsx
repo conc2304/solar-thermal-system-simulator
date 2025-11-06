@@ -37,6 +37,7 @@ export const SimulationRuntimeState = ({
         position: 'relative',
         borderTop: '1px solid',
         borderColor: 'secondary',
+        px: 4,
         ...sx,
       }}
     >

@@ -1,6 +1,5 @@
+import type { MetricConfig } from '@/components';
 import type { SystemState } from '@/simulation/solar-storage-system';
-
-import type { MetricConfig } from '../../components/molecules/data-table/DataTable';
 
 export const DEFAULT_SYSTEM_STATE_METRICS: MetricConfig<SystemState>[] = [
   {

@@ -2,7 +2,7 @@ import { ThemeUIProvider } from 'theme-ui';
 
 import { DefaultTheme } from '@/theme';
 
-import { DataTable } from './DataTable';
+import { DataTable, type MetricConfig } from './DataTable';
 
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -30,15 +30,23 @@ interface SampleData {
   pressure: number;
   status: string;
 }
+const metrics: MetricConfig<SampleData>[] = [
+  {
+    label: 'Temperature',
+    getValue: (data: SampleData) => `${data.temperature}°C`,
+  },
+  {
+    label: 'Pressure',
+    getValue: (data: SampleData) => `${data.pressure} kPa`,
+  },
+  { label: 'Status', getValue: (data: SampleData) => data.status },
+];
 
 export const Default: Story = {
   args: {
     title: 'System Metrics',
     data: { temperature: 25, pressure: 101.3, status: 'normal' },
-    metrics: [
-      { label: 'Temperature', getValue: (data: SampleData) => `${data.temperature}°C` },
-      { label: 'Pressure', getValue: (data: SampleData) => `${data.pressure} kPa` },
-      { label: 'Status', getValue: (data: SampleData) => data.status },
-    ],
+    // @ts-expect-error - can't figure out how to type this generic component for the story
+    metrics,
   },
 };

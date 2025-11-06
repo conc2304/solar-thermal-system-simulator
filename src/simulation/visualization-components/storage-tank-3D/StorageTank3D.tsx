@@ -22,11 +22,11 @@ export const StorageTank3D = ({
   rotation = [0, 0, 0],
   height = 4,
   radius = 4,
-  temperature,
+  // temperature,
   topTemp,
   bottomTemp,
-  storedEnergy,
-}: StorageTank3DProps) => {
+}: // storedEnergy,
+StorageTank3DProps) => {
   const [showLabels, setShowLabels] = useState(false);
   const tankRef = useRef<THREE.Mesh>(null);
 

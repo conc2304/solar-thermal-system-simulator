@@ -19,21 +19,21 @@ type TypographyVariant =
 
 interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   variant?: TypographyVariant;
-  component?: React.ElementType;
   color?: ThemeColor | Property.Color;
   sx?: ThemeUICSSObject;
 }
 
-export const Typography = forwardRef<HTMLElement, TypographyProps>(
+export const Typography = forwardRef<
+  HTMLElement,
+  TypographyProps
+>(
   (
-    { children, variant = 'body', component, color = 'text', sx, ...rest },
+    { children, variant = 'body', color = 'text', sx, ...rest },
     ref
   ) => {
     const theme = useThemeUI();
 
-    const Component =
-      component ||
-      (variant.startsWith('h') ? (variant as React.ElementType) : 'p');
+    const component = variant.startsWith('h') ? variant : 'p';
 
     // Get variant styles from theme
     const variantStyles = get(theme, `text.base`) || {};
@@ -47,10 +47,10 @@ export const Typography = forwardRef<HTMLElement, TypographyProps>(
       ...sx,
     };
 
-    return (
-      <Component ref={ref} sx={combinedStyles} {...rest}>
-        {children}
-      </Component>
+    return React.createElement(
+      component,
+      { ref, sx: combinedStyles, ...rest },
+      children
     );
   }
 );

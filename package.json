@@ -26,7 +26,8 @@
     "react-helmet": "^6.1.0",
     "theme-ui": "^0.17.2",
     "three": "^0.180.0",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "vite-bundle-analyzer": "^1.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",

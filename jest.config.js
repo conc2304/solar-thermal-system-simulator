@@ -22,4 +22,6 @@ export default {
     '^.+\\.svg$': 'jest-transformer-svg',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  // Add this to ensure setup files are transformed
+  transformIgnorePatterns: ['node_modules/(?!(@testing-library)/)'],
 };
