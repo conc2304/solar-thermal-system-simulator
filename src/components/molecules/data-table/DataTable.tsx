@@ -23,7 +23,7 @@ const MetricRow = ({
   maxStreamSize = 50,
 }: MetricRowProps) => {
   const { theme } = useThemeUI();
-  theme.rawColors?.primary;
+
   return (
     <tr>
       <td>
@@ -102,11 +102,19 @@ export const DataTable = <T,>({
     new Map()
   );
   const timestampRef = useRef(0);
+  const lastUpdateTimeRef = useRef(0);
 
   const [showCharts, setShowCharts] = useState(false);
 
   useEffect(() => {
     if (!showCharts) return;
+
+    // Throttle updates to 33ms between updates (30FPS)
+    const now = performance.now();
+    if (now - lastUpdateTimeRef.current < 33) {
+      return;
+    }
+    lastUpdateTimeRef.current = now;
 
     const timestamp = timestampRef.current++;
     const newChartData = new Map(chartData);
@@ -116,8 +124,8 @@ export const DataTable = <T,>({
       const existingData = newChartData.get(metric.label) || [];
       const newDataPoint: DataPoint = { timestamp, value: rawValue };
 
-      // Keep only last 100 points for performance
-      const updatedData = [...existingData, newDataPoint].slice(-100);
+      // Keep only last X points for performance
+      const updatedData = [...existingData, newDataPoint].slice(-maxStreamSize);
       newChartData.set(metric.label, updatedData);
     });
 
