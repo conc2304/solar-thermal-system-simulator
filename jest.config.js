@@ -12,6 +12,7 @@ export default {
           paths: {
             '@/*': ['./*'],
           },
+          types: ['vite/client', 'jest', '@testing-library/jest-dom'],
         },
       },
     ],

@@ -33,9 +33,9 @@ export const PlaybackControls = ({
           '&:hover': {
             color: 'secondary',
           },
-          '&:disabled': {
-            display: 'none',
-          },
+          // '&:disabled': {
+          //   display: 'none',
+          // },
         }}
       >
         <StepBack />
@@ -57,9 +57,9 @@ export const PlaybackControls = ({
           '&:hover': {
             color: 'secondary',
           },
-          '&:disabled': {
-            display: 'none',
-          },
+          // '&:disabled': {
+          //   display: 'none',
+          // },
         }}
       >
         <StepForward />

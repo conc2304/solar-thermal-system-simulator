@@ -89,6 +89,7 @@ export const SimulationRuntimeState = ({
           <label>Speed: {Math.floor(timeScale)}x</label>
           <input
             type="range"
+            role="slider"
             min={scaleMin}
             max={scaleMax}
             value={timeScale}

@@ -1,7 +1,6 @@
 import { type Theme } from 'theme-ui';
 
-import { ButtonVariants } from './component-variants';
-import { TextVariants } from './component-variants/text-variants';
+import { ButtonVariants, TextVariants } from './component-variants';
 import { rawColors } from './rawColors';
 
 export const DefaultTheme: Theme = {
@@ -24,7 +23,7 @@ export const DefaultTheme: Theme = {
         primary: rawColors.blue[400],
         secondary: rawColors.gray[500],
         success: rawColors.green[400],
-        error: rawColors.red[200],
+        error: rawColors.red[400],
         highlight: rawColors.yellow[300],
         muted: rawColors.gray[700],
       },
